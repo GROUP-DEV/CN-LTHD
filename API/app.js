@@ -5,6 +5,7 @@ bodyParser = require('body-parser');
 var app = express();
 
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
@@ -13,7 +14,7 @@ app.get('/', (req, res) => {
 	});
 })
 
-//app.use('/abc', require('./package'));
+app.use('/u', require('./listen/userListen'));
 
 var port = process.env.port || 1742;
 app.listen(port, () => {
