@@ -1,10 +1,10 @@
 var mysql = require('mysql'),
 info = {
-	host: '127.0.0.1',
+	host: 'www.db4free.net',
 	port: 3306,
-	user: 'root',
-	password: '',
-	database: 'VietBiker'
+	user: 'teamcnhdhau',
+	password: 'abcdghik2356',
+	database: 'vietbiker'
 };
 
 exports.load = function(sql) {
