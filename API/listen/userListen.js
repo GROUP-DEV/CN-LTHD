@@ -20,13 +20,15 @@ router.post('/login', (req, res) => {
 })
 
 /*
+"u_phone":"0947123456"
 "u_mail":"coldboy@gmail.com",
 "u_pass":"123456",
 "u_name":"Tran Joss",
 "u_role":"0"
+"u_seat":"1" (if car has 1 seats)
 */
 router.post('/signin', (req, res) => {
-	user.signIn(req.body.u_name, req.body.u_mail, req.body.u_pass, req.body.u_role)
+	user.signIn(req.body.u_name, req.body.u_phone, req.body.u_seat, req.body.u_mail, req.body.u_pass, req.body.u_role)
 	.then(value => {
 		console.log(value);
 		res.status(200).send({message: `Create account successfully!`});
