@@ -9,8 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google/maps": "^0.5.5",
     "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
     "express": "^4.16.4",
+    "geohash": "0.0.1",
+    "googlemaps": "^1.12.0",
     "mysql": "^2.16.0"
   }
 }
