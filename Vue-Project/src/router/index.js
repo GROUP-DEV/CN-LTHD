@@ -7,25 +7,35 @@ Vue.use(VueAxios,axios);
 //import HelloWorld from '@/components/HelloWorld'
 //import home from '../components/home.vue';
 // import listMail from '../components/listMail.vue';
-import login from '../components/login.vue';
+
 import request from '../components/request.vue';
-
-
+import login from '../components/login.vue';
+import render from '../components/render.vue';
+import location from '../components/location.vue';
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-        name: 'request',
-        path: '/',
-        component: request
-    },
   
-    {
+   {
         name: 'login',
-        path: '/request',
+        path: '/',
         component: login
     },
+     {
+        name: 'render',path: '/render',component: render,children:[
+            {path:'',name:'index',component:request},
+            {path:'/location',name:'location',component:location}
+        ]
+    },
+   // {
+   //      name: 'render',
+   //      path: '/uc-request',
+   //      component: render
+   //  },
+   
+ 
+  
  
     // {
     //     name: 'listMail',

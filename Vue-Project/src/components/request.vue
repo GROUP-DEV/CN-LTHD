@@ -96,13 +96,17 @@
         /* ---------------------------------------------------
             SIDEBAR STYLE
             ----------------------------------------------------- */
-
-            .wrapper {
+            /*.wrapper {
                 display: flex;
                 align-items: stretch;
                   background: url('https://uphinhnhanh.com/images/2018/12/02/map.png');
-            }
+            }*/
 
+            .request-receiver {
+                width: 100%;
+                height: 100%;
+               
+            }
             #sidebar {
                 min-width: 250px;
                 max-width: 250px;
@@ -243,6 +247,8 @@
             padding: 20px;
             min-height: 100vh;
             transition: all 0.3s;
+             background: url('https://uphinhnhanh.com/images/2018/12/02/map.png');
+            /*background: #fafafa6e;*/
         }
 
     /* ---------------------------------------------------
@@ -376,19 +382,25 @@
                 </div>
             </div>
         <!-- </div> -->
-
 </template>
     <script>
-        watch:{
-            $('#sidebar').toggleClass('active');
-            $(document).ready(function () {
-                $('#sidebarCollapse').on('click', function () {
-                    $('#sidebar').toggleClass('active');
-                });
-                $('#showmenu').on('click', function () {
-                    $('#sidebar').toggleClass('active');
-                });
-            });
+        export default{
+            data(){
+                return {
+                    
+                    isCheckLogin: true,
+                    isCheckRegister: false,
+                }
+            },
+            methods: {
+                changeIsCheckLogin: function(){
+                    this.isCheckLogin = !this.isCheckLogin;
+                    this.isCheckRegister = !this.isCheckRegister;
+                },
+                changeIsCheckRegister: function(){
+                    this.isCheckLogin = !this.isCheckLogin;
+                    this.isCheckRegister = !this.isCheckRegister;
+                },
+            }
         }
-       
     </script>

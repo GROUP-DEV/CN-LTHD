@@ -260,21 +260,19 @@
 </style>
 <template>
       <!-- Sidebar  -->
-            <nav id="sidebar">
+            <nav id="sidebar" v-bind:class="active">
                 <div class="sidebar-header">
                     <h3>DANH MỤC  
-                        <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <button type="button" id="sidebarCollapse" class="btn btn-info" @click="sidebarCollapse" >
                             <i class="fas fa-chevron-left"></i>
                         </button>
                     </h3>
                     <strong>
-                        <button type="button" id="showmenu" class="btn btn-info">
+                        <button type="button" id="showmenu" class="btn btn-info" @click="showmenu" >
                             <i class="fas fa-align-justify"></i>
                         </button>
                     </strong>
-
                 </div>
-
                 <ul class="list-unstyled components">
                     <li class="active">
                         <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" >
@@ -306,58 +304,29 @@
                         </a>
                     </li>
                 </ul>
-
-
             </nav>
-            <!-- left side bar fixed --> 
-           <!--   <div class="container">
-                <div class="side-bar">
-                    <ul class="side-left">
-                        <li>
-                                <a href="#"><i class="fa fa-th" aria-hidden="true">
-                                </i></a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                 <router-link class="rou"  :to="{name:'listTickets'}"><i class="fa fa-home" aria-hidden="true"></i></router-link>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <router-link class="rou" :to="{name:'listMail'}">
-                                    <i class="fa fa-book" aria-hidden="true"></i>
-                                </router-link>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="glyphicon glyphicon-signal" ></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="user-login">
-                                <i class="fa fa-user" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                        <li >
-                            <a href="#">
-                                <i class="fa fa-cog" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div> -->
-             <!-- hết side-bar -->
-   <!--  </div> -->
 </template>
 
 <script>
-   // import listTicket from './listTickets.vue';
-   //  export default {
-   //      components: {
-   //          applistTicket:listTicket,
-   //      }
-   //  };
+        export default{
+            data(){
+                return {
+                    
+                    isCheckLogin: true,
+                    isCheckRegister: false,
+                    active:'active',
+                }
+            },
+            methods: {
+                sidebarCollapse: function(){
+                    // $('#sidebar').toggleClass('active');
+                     this.active='active';
+                },
+                showmenu: function(){
+                     this.active ='';
+                },
+            }
+        }
 </script>
 
 
