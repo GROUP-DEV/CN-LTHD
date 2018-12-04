@@ -1,4 +1,5 @@
-var express = require('express'),
+var express = require('express');
+var jwt=require('jsonwebtoken');
 user = require('../process/userProcess');
 var router = express.Router();
 
@@ -9,9 +10,22 @@ var router = express.Router();
 router.post('/login', (req, res) => {
 	user.logIn(req.body.u, req.body.p)
 	.then(rows => {
-		if(rows.length == 1)
-			res.status(200).json(rows[0]);
-		res.status(405).send({message: `Don't found user`});
+		if(rows.length == 1){
+			var userAuth=rows[0];
+			var payload={
+				user: userAuth,
+			}
+			var acToken=jwt.sign(payload,'7avodoilc',{
+				expiresIn: 180
+			});
+			var rfToken='';
+			res.json({
+			user: userAuth,
+			access_token: acToken,
+			refresh_token: rfToken});	
+		}else{
+			res.status(405).send({message: `Don't found user`});
+		}
 	})
 	.catch(err => {
 		//console.log(err);
