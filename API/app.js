@@ -36,13 +36,13 @@ app.use(function(err,req,res,next){
 
 app.use(express.static(path.join(__dirname,'../clien')));
 
-app.use(function(req,res,next){
-	console.dir(req);
-	console.dir(res);
-	let err=new Error('Not Found');
-	err.status=404;
-	next(err);
-});
+//   app.use(function(req,res,next){
+//   	console.dir(req);
+//  	console.dir(res);
+//   	let err=new Error('Not Found');
+//  	err.status=404;
+// next(err);
+//   });
 
 
 
