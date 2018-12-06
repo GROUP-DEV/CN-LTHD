@@ -436,5 +436,100 @@
   </template>
   <script>
 
+ $(document).ready(function () {
+        // ẩn hiện table notification
+        $('.slide').on('click', function(){
+            $('#notification').toggleClass('hidden-show');
+            
+            $('.slide').toggleClass('rotate-arrow');
+        })
+    });
+
+       export default{
+        data(){
+            return {
+                isshowdetail: '',
+                isclose: '',
+                formdata:[
+                          {ID:1,Name:'truongvanhau911995@gmail.com',Phone:'0389194021',Address:'227 Nguyễn Văn Cừ, phường 4, Quận 5, Hồ Chí Minh, Việt Nam',Note:'xin chào mọi người'},
+                          {ID:2,Name:'Hậu hero',Phone:'0389194021',Address:'384 lý thái tổ, phương 10, quận 10, tp.hồ chí minh',Note:'xin chào mọi người'},
+                          {ID:3,Name:'Hậu 2',Phone:'0389194021',Address:'500 lý thái tổ, phương 12, quận 10, tp.hồ chí minh',Note:'xin chào mọi người'},
+                          ],
+                center: { lat: 10.7680949, lng: 106.6739531 },
+                markers: [{position:{lat: 10.7680949, lng: 106.6739531}}],
+                places: [],
+                currentPlace: null
+            }
+        },
+        mounted () {
+            //this.geolocate();
+            //this.addMarker();
+        },
+        methods: {
+                showDetail: function(){
+                    this.isshowdetail = 'show-detail ';
+                   // this.isclose = '';
+                },
+                closeDtail: function(){
+                    this.isshowdetail = 'hide-detail';
+
+                },
+                selectDetail(Id){
+                   this.isshowdetail = 'show-detail ';
+                  alert(Id);
+                },
+                // GET LAT AND LNG
+                geocodeAPI(){
+                    // Prevent actual submit
+                     // e.preventDefault();
+                     console.log(this.lng);
+                    var location1 = "384 ly thai to, phuong 10, quan 10, tp. ho chi minh";
+
+                    this.axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
+                      params:{
+                        address:location1,
+                        key:'AIzaSyCHY7K0nxdBJ2MVMMVe46mJP8PvoezIUvc'
+                      }
+                    })
+                    .then(function(response){
+                      // Log full response
+                
+                      var ln = response.data.results[0].geometry.location.lng;
+                      //this.lng = ln;
+                       // this.location.lat = response.data.results[0].geometry.location.lat;
+                        //this.lng = response.data.results[0].geometry.location.lng;
+                      console.log(response.data.results[0].geometry.location.lng);
+
+                    
+                    })
+                    .catch(function(error){
+                      console.log(error);
+                    });
+                },
+                setPlace(place) {
+                  this.currentPlace = place;
+                },
+                addMarker() {
+                  if (this.currentPlace) {
+                    const marker = {
+                      lat: this.currentPlace.geometry.location.lat(),
+                      lng: this.currentPlace.geometry.location.lng()
+                    };
+                    this.markers.push({ position: marker });
+                    this.places.push(this.currentPlace);
+                    this.center = marker;
+                    this.currentPlace = null;
+                  }
+                },
+                 geolocate: function() {
+                  navigator.geolocation.getCurrentPosition(position => {
+                    this.center = {
+                      lat: position.coords.latitude,
+                      lng: position.coords.longitude
+                    };
+                  });
+                }
+         }
+    }
   </script>
 
