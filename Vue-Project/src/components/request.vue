@@ -366,10 +366,20 @@
                                         <input type="email" class="form-control" id="name" placeholder="Name"/>
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" class="form-control" id="phone" placeholder="Phone"/>
+                                        <input type="text" class="form-control" id="phone" placeholder="Phone"/>
                                     </div>
                                       <div class="form-group">
-                                        <input type="password" class="form-control" id="address" placeholder="Address"/>
+                                        <!-- <input type="password" class="form-control" id="address" placeholder="Address"/> -->
+                                            <gmap-autocomplete
+                                              class="form-control"
+                                              :value="description"
+                                              @place_changed="setPlace"
+                                              :options="{
+                                              
+                                                bounds: {north: 102.170435826, south: 8.59975962975, east: 109.33526981, west: 23.3520633001},
+                                                strictBounds: true
+                                              }">
+                                            </gmap-autocomplete>
                                     </div>
                                     <div class="form-group">
                                         <textarea class="form-control" id="note" cols="30" rows="5" placeholder="Note"></textarea>
@@ -387,9 +397,10 @@
         export default{
             data(){
                 return {
-                    
+                    //description: 'Address',
                     isCheckLogin: true,
                     isCheckRegister: false,
+                    latLng: {}
                 }
             },
             methods: {
@@ -401,6 +412,14 @@
                     this.isCheckLogin = !this.isCheckLogin;
                     this.isCheckRegister = !this.isCheckRegister;
                 },
+                setPlace(place) {
+                    if (!place) return
+
+                    this.latLng = {
+                      lat: place.geometry.location.lat(),
+                      lng: place.geometry.location.lng(),
+                    };
+                }
             }
         }
     </script>

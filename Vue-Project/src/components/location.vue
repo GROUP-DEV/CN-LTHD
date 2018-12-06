@@ -52,17 +52,45 @@
             z-index: 1000;
          }
         .location-detail .request-info ul{
-            width: 300px;
+           width: 340px;
+            height: 500px;
             margin: 0;
             padding: 30px;
             color: black;
             background-color: #fff;
-            border-radius: 10px;
+            border-radius: 6px;
         }
         .location-detail .request-info ul li{
             list-style: none;
         }
+          
 
+          .navbar {
+              padding: 15px 10px;
+              background: #fff;
+              border: none;
+              border-radius: 0;
+              margin-bottom: 40px;
+              box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.85);
+          }
+
+          .navbar-btn {
+              box-shadow: none;
+              outline: none !important;
+              border: none;
+          }
+
+          .line {
+              width: 100%;
+              height: 1px;
+              border-bottom: 1px dashed #ddd;
+              margin: 40px 0;
+          }
+
+          i,
+          span {
+              display: inline-block;
+          }
 
            /* ---------------------------------------------------
             SIDEBAR STYLE
@@ -321,79 +349,34 @@
                         <thead>
                           <tr>
                             <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Note</th>
+                            <th scope="col"></th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                          <tr v-for="Items in formdata">
+                            <th scope="row">{{Items.ID}}</th>
+                            <td>{{Items.Name}}</td>
+                            <td>{{Items.Phone}}</td>
+                            <td>{{Items.Address}}</td>
+                             <td>{{Items.Note}}</td>
                             <td>
-                              <button class="btn btn-primary detail">Detail</button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            <td>
-                              <button class="btn btn-primary detail">Detail</button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                            <td>
-                              <button class="btn btn-primary detail">Detail</button>
+                              <button class="btn btn-primary detail" @click="selectDetail(Items.Address)">Detail</button>
                             </td>
                           </tr>
                         </tbody>
                       </table>
-           <!--  <table class="table table-hover">
-              <thead>
-                  <tr>
-                      <th>#</th>
-                      <th>Time</th>
-                      <th>Detail</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                      <td scope="row"></td>
-                      <td>123</td>
-                      <td>
-                          <button class="btn btn-primary detail">Detail</button>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td scope="row"></td>
-                      <td>123</td>
-                      <td>
-                          <button class="btn btn-primary detail">Detail</button>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td scope="row"></td>
-                      <td>123</td>
-                      <td>
-                          <button class="btn btn-primary detail">Detail</button>
-                      </td>
-                  </tr>
-              </tbody>
-            </table> -->
+
           </div>
         </div>
         <!-- notification : end -->
 
         <!-- Pagination : start -->
         <div class="row" style="justify-content: flex-end">
+           <div class="col-sm-4">
           <nav aria-label="Page navigation example">
             <ul class="pagination">
               <li class="page-item"><a class="page-link" href="#">Previous</a></li>
@@ -404,29 +387,46 @@
             </ul>
           </nav>
         </div>
+        </div>
         <!-- Pagination : end -->
 
         <!-- localtion-detail : start -->
-        <div class="location-detail">
+        <div class="location-detail" v-bind:class="isshowdetail">
           <div class="row">
             <div class="col-sm-4">
               <div class="request-info">
-                <div class="close">
+                <div class="close" @click="closeDtail">
                   <i class="fa fa-times" aria-hidden="true"></i>
                 </div>
                 <ul>
-                  <li>Name : <span>Nguyễn Văn A </span> </li>
+                  <li>Name &nbsp;&nbsp;  : <span>Nguyễn Văn A </span> </li>
                   <li>Address : <span>1994</span></li>
-                  <li>Phone : <span>Gay</span></li>
-                  <li>Note : <span>1234567890</span></li>
-                  <li>Location : <span>...</span></li>
+                  <li>Phone  &nbsp;&nbsp;  : <span>Gay</span></li>
+                  <li>Note  &nbsp;&nbsp;&nbsp;&nbsp;   : <span>1234567890</span></li>
+                  <li>Lat &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  : <span>...</span></li>
+                  <li>lng &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;  : <span>...</span></li>
                 </ul>
               </div>
             </div>
             <div class="col-sm">
-              <div id="map" style="min-height: 600px">
-
-              </div>
+               <GmapMap
+                    :center="center"
+                    :zoom="13"
+                    map-type-id="terrain"
+                    style="width: 100%; height: 100%"
+                  >
+                    <GmapMarker
+                      :key="index"
+                      v-for="(m, index) in markers"
+                      :position="m.position"
+                      :clickable="true"
+                      :draggable="true"
+                      @click="center=m.position"
+                    />
+                  </GmapMap>
+              <!-- <div id="map" style="min-height: 600px">
+                  
+              </div> -->
             </div>
           </div>
         </div>
@@ -436,25 +436,5 @@
   </template>
   <script>
 
- $(document).ready(function () {
-        // ẩn hiện table notification
-        $('.slide').on('click', function(){
-            $('#notification').toggleClass('hidden-show');
-            
-            $('.slide').toggleClass('rotate-arrow');
-        })
-
-        // open detail
-        $('.detail').on('click', function(){
-            $('.location-detail').removeClass('hide-detail');
-            $('.location-detail').addClass('show-detail');
-        })
-
-        // cloe detail
-        $('.close').on('click', function(){
-            $('.location-detail').removeClass('show-detail');
-            $('.location-detail').addClass('hide-detail');
-        })
-    });
   </script>
 

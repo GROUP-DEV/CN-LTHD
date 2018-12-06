@@ -257,6 +257,14 @@
                 display: none;
             }
         }
+        #sidebar ul li:focus {
+            color: #7386D5;
+            background: #fff;
+        }
+         #sidebar ul li:active {
+            color: #7386D5;
+            background: #fff;
+        }
 </style>
 <template>
       <!-- Sidebar  -->
@@ -275,16 +283,21 @@
                 </div>
                 <ul class="list-unstyled components">
                     <li class="active">
-                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" >
-                            <i class="fas fa-home"></i>
+                        <!-- <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" > -->
+                           
+                        <router-link data-toggle="collapse" aria-expanded="false"   to="/request">
+                             <i class="fas fa-home"></i>
                             Request
-                        </a>
+                        </router-link>
+                        <!-- </a> -->
                     </li>
                     <li>
-                        <a href="#">
-                            <i class="fas fa-map-marker-alt"></i>
-                            Location    
-                        </a>
+                        <!-- <a href="#"> -->
+                            <router-link  to="/location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Location
+                            </router-link>
+                            <!-- </a> -->
                         <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" >
                             <i class="fas fa-copy"></i>
                             Management

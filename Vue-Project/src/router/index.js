@@ -2,8 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import VueAxios from 'vue-axios';
 import axios from 'axios';
+
 Vue.use(VueAxios,axios);
- 
+
 //import HelloWorld from '@/components/HelloWorld'
 //import home from '../components/home.vue';
 // import listMail from '../components/listMail.vue';
@@ -24,7 +25,7 @@ export default new Router({
     },
      {
         name: 'render',path: '/render',component: render,children:[
-            {path:'',name:'index',component:request},
+            {path:'/request',name:'request',component:request},
             {path:'/location',name:'location',component:location}
         ]
     },
