@@ -126,9 +126,8 @@
             </div>
             </nav>
 
-
             <div class="wrapper-management">
-                <table class="table table-hover table-inverse table-responsive">
+                <table class="table table-hover table-inverse">
                     <thead class="thead-inverse">
                         <tr>
                             <th>#</th>
@@ -138,55 +137,51 @@
                             <th>Note</th>
                             <th>Time</th>
                             <th>Status</th>
-                            <th>Driver</th>
-                            <th>View map</th>
+                            <th></th>
                         </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td scope="row">1</td>
-                                <td>Nguyễn Thị lai</td>
-                                <td>02345761223</td>
-                                <td>666 - Trần Hưng Đạo</td>
-                                <td>Ghi chú</td>
-                                <td>thời gian được app nhận được</td>
-                                <td>
-                                    <select class="form-control form-control-lg">
-                                        <option>not located</option>
-                                        <option>located</option>
-                                        <option>Received</option>
-                                        <option>moving</option>
-                                        <option>done</option>
-                                    </select>
-                                </td>
-                                <td><button class="btn btn-primary view-driver">View</button></td>
-                                <td><button class="btn btn-primary view-map">View</button></td>
-                            </tr>
-                            <tr>
-                                <td scope="row">2</td>
-                                <td>Nguyễn Văn Lai</td>
-                                <td>02345761223</td>
-                                <td>666 - Trần Hưng Đạo</td>
-                                <td>Ghi chú</td>
-                                <td>thời gian được app nhận được</td>
-                                <td>
-                                    <select class="form-control form-control-lg">
-                                        <option>not located</option>
-                                        <option>located</option>
-                                        <option>Received</option>
-                                        <option>moving</option>
-                                        <option>done</option>
-                                    </select>
-                                </td>
-                                <td><button class="btn btn-primary view-driver">View</button></td>
-                                <td><button class="btn btn-primary view-map">View</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td scope="row">1</td>
+                            <td>Nguyễn Thị lai</td>
+                            <td>02345761223</td>
+                            <td>666 - Trần Hưng Đạo</td>
+                            <td>Ghi chú</td>
+                            <td>thời gian được app nhận được</td>
+                            <td>
+                                <select class="form-control form-control-lg">
+                                    <option>not located</option>
+                                    <option>located</option>
+                                    <option>Received</option>
+                                    <option>moving</option>
+                                    <option>done</option>
+                                </select>
+                            </td>
+                            <td><button class="btn btn-primary view-driver">View</button></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">2</td>
+                            <td>Nguyễn Văn Lai</td>
+                            <td>02345761223</td>
+                            <td>666 - Trần Hưng Đạo</td>
+                            <td>Ghi chú</td>
+                            <td>thời gian được app nhận được</td>
+                            <td>
+                                <select class="form-control form-control-lg">
+                                    <option>not located</option>
+                                    <option>located</option>
+                                    <option>Received</option>
+                                    <option>moving</option>
+                                    <option>done</option>
+                                </select>
+                            </td>
+                            <td><button class="btn btn-primary view-driver">View</button></td>
+                        </tr>
+                    </tbody>
+                </table>
                 
                 <!-- Pagination : start -->
-                <div class="row" style="justify-content: flex-end">
+                <div class="row" style="justify-content: center">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <li class="page-item"><a class="page-link" href="#">Previous</a></li>
@@ -199,24 +194,41 @@
                 </div>
                 <!-- Pagination : end -->
 
-                <!-- driver : start -->
-            <div class="driver">
-                <div class="portrait">
-                    <img src="./images/20161204-010047-1_600x600_NLCO.jpg" alt="">
-                </div>
-                <div class="info-portrait">
-                    <ul>
-                        <li>Name : Châu Thị Trời</li>
-                        <li>Year : 1995</li>
-                        <li>Sex : Gay</li>
-                        <li>Phone : 123456789</li>
-                    </ul>
-                </div>
-            </div> 
-            <!-- driver : end -->
+                <!-- wrapper-driver : start -->
+                <div class="wrapper-driver">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <!-- driver : start -->
+                            <div class="driver">
+                                <div class="close-driver">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </div>
+                                <div class="driver-content">
+                                    <div class="portrait">
+                                        <img src="./images/20161204-010047-1_600x600_NLCO.jpg" alt="">
+                                    </div>
+                                    <div class="info-portrait">
+                                        <ul>
+                                            <li>Name : Châu Thị Trời</li>
+                                            <li>Year : 1995</li>
+                                            <li>Sex : Gay</li>
+                                            <li>Phone : 123456789</li>
+                                            <li>Km : ...</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div> 
+                            <!-- driver : end -->
+                        </div>
 
-            <div id="map-view">
+                        <div class="col-sm">
+                            <div id="map-view">
 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- wrapper-customer : end -->
             </div>
         </div>
     </div>
@@ -251,7 +263,6 @@
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHY7K0nxdBJ2MVMMVe46mJP8PvoezIUvc&libraries=places&callback=initMap"
         async defer></script>
-  </body>
     <!-- jQuery CDN - Slim version (=without AJAX) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <!-- Popper.JS -->
@@ -273,15 +284,16 @@
 
 
 
-        // ẩn hiện thông tin customer
+        // hiện thông tin driver and map
         $('.view-driver').on('click', function(){
-            $('.driver').toggleClass('show-driver');
+            $('.wrapper-driver').addClass('show-driver');
         });
 
-        // ẩn hiện đường đi map
-        $('.view-map').on('click', function(){
-            $('#map-view').toggleClass('show-map');
+        // ẩn  thông tin driver and map
+        $('.close-driver').on('click', function(){
+            $('.wrapper-driver').removeClass('show-driver');
         });
+
     });
 </script>
 </body>

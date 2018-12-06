@@ -1,0 +1,60 @@
+.wrapper-driver{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(119, 119, 119, 0.4);
+    padding: 30px;
+    transition: 1s;
+    transform: scale(0);
+    opacity: 0;
+}
+.wrapper-driver .driver{
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+}
+.wrapper-driver .driver .close-driver{
+    position: relative;
+    top: 5px;
+    left: 20px;
+    cursor: pointer;
+}
+.wrapper-driver .driver .driver-content {
+    background: #fff;
+    border-radius: 10px;
+}
+.wrapper-driver .driver .driver-content .portrait{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 15px auto;
+    margin-bottom: 0;
+}
+.wrapper-driver .driver .driver-content .portrait img{
+    width: 100%;
+}
+
+.wrapper-driver .driver .driver-content .info-portrait ul{
+    width: 250px;
+    margin: 0;
+    padding: 15px 30px;
+    color: black;
+    background-color: #fff;
+    border-radius: 10px;
+}
+.wrapper-driver .driver .driver-content .info-portrait ul li{
+    list-style: none;
+}
+#map-view{
+    min-height: 700px;
+}
+
+.show-driver{
+    transform: scale(1);
+    opacity: 1;
+}
+
+
