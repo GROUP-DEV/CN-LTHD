@@ -321,7 +321,7 @@
         </form>
         <ul class="navbar-nav mr-auto my-lg-0">
           <li class="nav-item">
-            <a class="nav-link " href="#">Trương Văn Hậu</a>
+            <a class="nav-link " href="#">Trương Văn Hậu {{center.lat}} {{center.lng}}</a>
           </li> 
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -361,7 +361,11 @@
                             <th scope="row">{{Items.ID}}</th>
                             <td>{{Items.Name}}</td>
                             <td>{{Items.Phone}}</td>
-                            <td>{{Items.Address}}</td>
+                            <td >{{Items.Address}}
+                                <!-- <gmap-place-input :default-place="Items.Address" v-model="searchAddressInput"
+                                  @place_changed="setPlace">
+                                </gmap-place-input> -->
+                            </td>
                              <td>{{Items.Note}}</td>
                             <td>
                               <button class="btn btn-primary detail" @click="selectDetail(Items.Address)">Detail</button>
@@ -403,8 +407,8 @@
                   <li>Address : <span>1994</span></li>
                   <li>Phone  &nbsp;&nbsp;  : <span>Gay</span></li>
                   <li>Note  &nbsp;&nbsp;&nbsp;&nbsp;   : <span>1234567890</span></li>
-                  <li>Lat &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  : <span>...</span></li>
-                  <li>lng &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;  : <span>...</span></li>
+                  <li>Lat &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  : <span>{{center.lat}}</span></li>
+                  <li>lng &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;  : <span>{{center.lng}}</span></li>
                 </ul>
               </div>
             </div>
@@ -435,6 +439,7 @@
     </div>
   </template>
   <script>
+   // import * as VueGoogleMaps from 'vue2-google-maps'
 
  $(document).ready(function () {
         // ẩn hiện table notification
@@ -444,7 +449,6 @@
             $('.slide').toggleClass('rotate-arrow');
         })
     });
-
        export default{
         data(){
             return {
@@ -455,10 +459,10 @@
                           {ID:2,Name:'Hậu hero',Phone:'0389194021',Address:'384 lý thái tổ, phương 10, quận 10, tp.hồ chí minh',Note:'xin chào mọi người'},
                           {ID:3,Name:'Hậu 2',Phone:'0389194021',Address:'500 lý thái tổ, phương 12, quận 10, tp.hồ chí minh',Note:'xin chào mọi người'},
                           ],
-                center: { lat: 10.7680949, lng: 106.6739531 },
+                center: {lat: 10.7680949, lng: 106.6739531 },//lat: 10.7680949, lng: 106.6739531 },
                 markers: [{position:{lat: 10.7680949, lng: 106.6739531}}],
                 places: [],
-                currentPlace: null
+                searchAddressInput: ''// save place current
             }
         },
         mounted () {
@@ -474,40 +478,42 @@
                     this.isshowdetail = 'hide-detail';
 
                 },
-                selectDetail(Id){
+                selectDetail(ID){
                    this.isshowdetail = 'show-detail ';
-                  alert(Id);
-                },
-                // GET LAT AND LNG
-                geocodeAPI(){
-                    // Prevent actual submit
-                     // e.preventDefault();
-                     console.log(this.lng);
-                    var location1 = "384 ly thai to, phuong 10, quan 10, tp. ho chi minh";
-
-                    this.axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
-                      params:{
-                        address:location1,
-                        key:'AIzaSyCHY7K0nxdBJ2MVMMVe46mJP8PvoezIUvc'
-                      }
-                    })
-                    .then(function(response){
-                      // Log full response
-                
-                      var ln = response.data.results[0].geometry.location.lng;
-                      //this.lng = ln;
-                       // this.location.lat = response.data.results[0].geometry.location.lat;
-                        //this.lng = response.data.results[0].geometry.location.lng;
-                      console.log(response.data.results[0].geometry.location.lng);
-
-                    
-                    })
-                    .catch(function(error){
-                      console.log(error);
+                   alert(ID);
+                   var geocoder = new google.maps.Geocoder();
+                   geocoder.geocode({'address': ID}, (results, status) => {
+                    console.log(results);
+                      //if (status === 'OK') {
+                        this.center.lat = results[0].geometry.location.lat();
+                        this.center.lng = results[0].geometry.location.lng();
+                        this.markers[0].position.lat = results[0].geometry.location.lat();
+                        this.markers[0].position.lng = results[0].geometry.location.lng();
+                      //}
                     });
+                   //this.setPlace(Id);
+                  //   this.axios.get(VueGoogleMaps, {
+                  //     load: {
+                  //     key: 'AIzaSyCHY7K0nxdBJ2MVMMVe46mJP8PvoezIUvc',
+                  //     libraries: Id, // This is required if you use the Autocomplete plugin
+                  //     },
+                  //  })
+                  // .then((response)=>{
+                  // // Log full response
+            
+                  // var ln = response.data.results[0].geometry.location.lng;
+                  // //this.lng = ln;
+                  //  // this.location.lat = response.data.results[0].geometry.location.lat;
+                  //   //this.lng = response.data.results[0].geometry.location.lng;
+                  // console.log(response.data);
+                  // })
+                  // .catch(function(error){
+                  //   console.log(error);
+                  // });
+
                 },
-                setPlace(place) {
-                  this.currentPlace = place;
+                setPlaceText(place) {
+                  this.place = place;
                 },
                 addMarker() {
                   if (this.currentPlace) {
@@ -521,13 +527,11 @@
                     this.currentPlace = null;
                   }
                 },
-                 geolocate: function() {
-                  navigator.geolocation.getCurrentPosition(position => {
-                    this.center = {
-                      lat: position.coords.latitude,
-                      lng: position.coords.longitude
-                    };
-                  });
+                setPlace(place) {
+                  this.center = {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng(),
+                  };
                 }
          }
     }

@@ -298,16 +298,16 @@
                                 Location
                             </router-link>
                             <!-- </a> -->
-                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" >
+                      <!--   <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" >
                             <i class="fas fa-copy"></i>
                             Management
-                        </a>
+                        </a> -->
                     </li>
                     <li>
-                        <a href="#">
-                            <i class="fas fa-image"></i>
-                            Portfolio
-                        </a>
+                        <router-link  to="/management">
+                                <i class="fas fa-copy"></i>
+                                Management
+                         </router-link>
                     </li>
 
                     <li>
