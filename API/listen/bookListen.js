@@ -42,4 +42,15 @@ router.post('/bookcar', (req, res) => {
 	});
 })
 
+router.get('/', (req, res) => {
+	book.getAll()
+	.then(rows => {
+		res.status(200).send(JSON.stringify(rows));
+	})
+	.catch(err => {
+		console.log(err);
+		res.status(400).send(JSON.stringify(err));
+	});
+})
+
 module.exports = router;

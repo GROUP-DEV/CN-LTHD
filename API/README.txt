@@ -33,3 +33,10 @@ Links API:
 		return  message: Added successfully!
 	else if(error)
 		return status(500) + string(err)
+
+/b/
+	- Input: NULL
+	- Output: JSON type list have columns
+	customer_name, customer_phone, address, note,
+	geo_lat, geo_lon, re_geo_lat, re_geo_lon,
+	biker, time, status, seats
