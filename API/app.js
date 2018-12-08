@@ -45,8 +45,8 @@ app.use(express.static(path.join(__dirname,'../clien')));
 //   });
 
 
-
 app.use('/u', require('./listen/userListen'));
+app.use('/b', require('./listen/bookListen'));
 
 var port = process.env.port || 1742;
 app.listen(port, () => {

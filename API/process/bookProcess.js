@@ -8,6 +8,7 @@ exports.loadAll = function() {
 }
 
 function geocodingId(lati, longi) {
+	console.log("Location: "+lati + " " + longi);
 	db.load(`SELECT id FROM geocode WHERE latitude LIKE '${lati}' AND longitude LIKE '${longi}'`, (err, rows) => {
 		if(rows.length == 1) return rows[0].id;
 		else {
@@ -19,12 +20,12 @@ function geocodingId(lati, longi) {
 }
 
 exports.bookCar = function(name, phone, address, note, seat) {
-	var sql = `SELECT id, name, phone FROM customer WHERE MD5(phone) like MD5('${phone}')`;
+	let sql = `SELECT id, name, phone FROM customer WHERE MD5(phone) like MD5('${phone}')`;
 
-	db.load(sql)
+	return db.load(sql)
 	.then(rows => {
 		if(rows.length == 0){
-			return db.write(`INSERT INTO customer (name, phone) VALUES ('${name}', '${phone}')`).insertId;
+			return db.write(`INSERT INTO customer (name, phone) VALUES ('${name}', '${phone}')`);
 		}
 		else if(rows.length == 1 && rows[0].name != name){
 			db.write(`UPDATE customer SET name = '${name}' WHERE phone = '${phone}')`);
@@ -35,13 +36,24 @@ exports.bookCar = function(name, phone, address, note, seat) {
 		}
 	})
 	.then(id_customer => {
-		let geocode = geocoding.getGeoCoding(address);
+		if(typeof id_customer === 'object')
+			id_customer = id_customer.insertId;
 
-		db.write(`INSERT INTO BookCar(customer, address, note, geocodin, status, seats) VALUES 
-			('${id_customer}','${address}','${node}','${geocodingId(geocode.latitude,geocode.longitude)}','0','${seat}')`);
+		sql = `INSERT INTO BookCar(customer, address, note, status, seats) VALUES 
+			('${id_customer}', 
+			'${address}', 
+			'${note}', 
+			'0', 
+			'${seat}')`;
+		return db.write(sql);
 	})
 	.catch(err => {
 		console.log(err);
-		res.status(400).send(err);
+		throw err;
 	});
+}
+
+exports.getDateCurrent = function() {
+	var current = new Date();
+	return `${current.getMonth() + 1}/${current.getDate()}/${current.getFullYear()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 }
