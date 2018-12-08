@@ -1,5 +1,4 @@
-var db = require('../other/cnt_mysql'),
-geocoding = require('../other/google_maps');
+var db = require('../other/cnt_mysql');
 
 exports.loadAll = function() {
 	var sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', BookCar.address 'welcome_address', BookCar.note, BookCar.seats, BookCar.time 'time_request', g1.latitude 'geocoding_lat', g1.longitude 'geocoding_lon', g2.latitude 'reverse_geocoding_lat', g2.longitude 'reverse_geocoding_lon' FROM BookCar INNER JOIN customer ON BookCar.customer = customer.id LEFT JOIN geocode g1 ON BookCar.geocodin = g1.id LEFT JOIN geocode g2 ON BookCar.regeocoding = g2.id LEFT JOIN user ON BookCar.biker = user.id`;
@@ -19,7 +18,7 @@ function geocodingId(lati, longi) {
 	});
 }
 
-exports.bookCar = function(name, phone, address, note, seat) {
+exports.bookCar = function(name, phone, address, note, seat, time_book) {
 	let sql = `SELECT id, name, phone FROM customer WHERE MD5(phone) like MD5('${phone}')`;
 
 	return db.load(sql)
@@ -39,12 +38,13 @@ exports.bookCar = function(name, phone, address, note, seat) {
 		if(typeof id_customer === 'object')
 			id_customer = id_customer.insertId;
 
-		sql = `INSERT INTO BookCar(customer, address, note, status, seats) VALUES 
+		sql = `INSERT INTO BookCar(customer, address, note, status, seats, time) VALUES 
 			('${id_customer}', 
 			'${address}', 
 			'${note}', 
 			'0', 
-			'${seat}')`;
+			'${seat}', 
+			'${time_book}')`;
 		return db.write(sql);
 	})
 	.catch(err => {
@@ -55,5 +55,13 @@ exports.bookCar = function(name, phone, address, note, seat) {
 
 exports.getDateCurrent = function() {
 	var current = new Date();
-	return `${current.getMonth() + 1}/${current.getDate()}/${current.getFullYear()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+	return `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+}
+
+exports.set2GeoCoding = function(geocoding_id, phone_customer, date_book) {
+	var sql = `UPDATE BookCar 
+			SET geocodin = '${geocoding_id}', regeocoding = '${geocoding_id}' 
+			WHERE customer IN (SELECT id FROM customer WHERE phone = '${phone_customer}') 
+			AND time = '${date_book}'`;
+	return db.write(sql);
 }

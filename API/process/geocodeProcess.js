@@ -1,13 +1,13 @@
 var gm = require('../other/google_maps'), 
 db = require('../other/cnt_mysql');
 
-exports.getGeoCoding = function(lat,lon) {
+exports.get = function(lat,lon) {
 	var sql = `SELECT id, latitude, longitude FROM geocode WHERE latitude LIKE '${lat}' AND longitude LIKE '${lon}'`;
 	return db.load(sql);
 }
 
-exports.addGeoCoding = function(lat,lon) {
-	var `INSERT INTO geocode (latitude, longitude) VALUES ('${lat}', '${lon}')`;
+exports.add = function(lat,lon) {
+	var sql = `INSERT INTO geocode (latitude, longitude) VALUES ('${lat}', '${lon}')`;
 	return db.write(sql);
 }
 
