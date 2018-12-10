@@ -1,0 +1,99 @@
+.wrapper-driver{
+    display: flex;
+    padding-top: 87px;
+    padding-bottom: 80px;
+    padding-left: 41px;
+    padding-right: 40px;
+    width: 767px;
+    height: 1024px;
+    background: url(https://themes.webdoctor.vn/template/frontend/page-demo/Images/pad-port.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    margin: 0 auto;
+}
+
+/* ba nút : bắt đầu, đang di chuyển, kết thúc */
+.wrapper-button{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 5px;
+}
+/* ba nút : bắt đầu, đang di chuyển, kết thúc */
+
+
+/* thông tin : hình ảnh, tên, trạng thái */
+.info-driver{
+    width: 100%;
+    height: 200px;
+    background-color: #3d5de6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.info-driver span{
+    margin-top: 20px;
+}
+
+.portrait{
+    width: 60px;
+    height: 60px;
+    background-color: grey;
+    border-radius: 50%;
+}
+
+.info-driver .driver-status{
+    padding: 0 5px;
+}
+.info-driver select{
+    font-family: segoe ui;
+    font-size: 15px;
+    border-radius: 5px;
+}
+/* thông tin : hình ảnh, tên, trạng thái */
+
+
+.wrapper-driver #content{
+    padding: 0;
+    position: relative;
+    font-family: segoe ui;
+    display: flex;
+    flex-direction: column;
+}
+/* thông báo: start */
+.wrapper-driver #content .wrapper-notification {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(156, 156, 156, 0.37);
+    transition: 1s;
+    transform: scale(0);
+    transform-origin: 0 0;
+}
+.show-wrapper-notification{
+    transform: scale(1) !important;
+}
+.wrapper-driver #content .wrapper-notification .notification{
+    position: absolute;
+    left: 20%;
+    top: 198px;
+    background-color: #fff;
+    padding: 19px 20px;
+    border-radius: 6px;
+    text-align: center;
+}
+.wrapper-driver #content .wrapper-notification .notification .agree{
+    background-color: #74b9ff;
+    padding: 0 5px;
+    color: #fff;
+}
+.wrapper-driver #content .wrapper-notification .notification .refuse{
+    background-color: #74b9ff;
+    padding: 0 5px;
+    color: #fff;
+}
+/* thông báo: end */
+
+
