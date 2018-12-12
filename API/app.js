@@ -1,6 +1,7 @@
 var express = require('express');
 const debug = require('debug')('poi:server');
 const path = require('path');
+var jwt=require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -43,6 +44,29 @@ app.use(express.static(path.join(__dirname,'../clien')));
 //  	err.status=404;
 // next(err);
 //   });
+
+var verifyAccess=(req,res,next)=>{
+	var token=req.headers['x-access-token'];
+	if(token){
+		jwt.verify(token,'7avodoilc', (err,payload) => {
+			if(err){
+				res.statusCode=403;
+				res.JSON({
+					msg:'Invalid token',
+					error: err
+				});
+			}else{
+				req.token_payload=payload;
+				next();
+			}
+		})
+	}else{
+		res.statusCode=403;
+		res.JSON({
+			msg:'No token found'
+		});
+	}
+}
 
 
 app.use('/u', require('./listen/userListen'));
