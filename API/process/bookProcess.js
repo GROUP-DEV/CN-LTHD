@@ -67,7 +67,7 @@ exports.set2GeoCoding = function(geocoding_id, phone_customer, date_book) {
 }
 
 exports.getAll = function() {
-	var sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', address, note, g1.latitude 'geo_lat', g1.longitude 'geo_lon', g2.latitude 're_geo_lat', g2.longitude 're_geo_lon', biker, time, status, seats 
+	var sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', address, note, g1.latitude 'geo_lat', g1.longitude 'geo_lon', g2.latitude 're_geo_lat', g2.longitude 're_geo_lon', biker, time, BookCar.status, seats 
 FROM BookCar JOIN geocode g1 ON BookCar.geocodin = g1.id
 JOIN geocode g2 ON BookCar.regeocoding = g2.id
 JOIN customer ON BookCar.customer = customer.id
