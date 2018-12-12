@@ -12,7 +12,7 @@ exports.logIn = function(user, pass) {
 	return db.load(sql);
 }
 
-exports.signIn = function(user, phone, email, password, seat, seat, role) {
+exports.signIn = function(user, phone, seat, email, password, role) {
 
 	var sql = `INSERT INTO user (username, phone, seat, email, password, role) VALUES 
 ('${user ? user : ''}', '${phone}', '${seat ? seat : '0'}', '${email}', MD5('${password}'), '${role ? role : `-1`}');`;
