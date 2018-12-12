@@ -71,6 +71,6 @@ exports.getAll = function() {
 FROM BookCar JOIN geocode g1 ON BookCar.geocodin = g1.id
 JOIN geocode g2 ON BookCar.regeocoding = g2.id
 JOIN customer ON BookCar.customer = customer.id
-JOIN user ON user.id = BookCar.biker`;
+LEFT JOIN user ON user.id = BookCar.biker`;
 	return db.load(sql);
 }
