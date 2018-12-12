@@ -3,6 +3,30 @@ var jwt=require('jsonwebtoken');
 user = require('../process/userProcess');
 var router = express.Router();
 
+var verifyAccess=(req,res,next)=>{
+	var token=req.headers['x-access-token'];
+	if(token){
+		jwt.verify(token,'7avodoilc', (err,payload) => {
+			if(err){
+				res.statusCode=403;
+				res.JSON({
+					msg:'Invalid token',
+					error: err
+				});
+			}else{
+				req.token_payload=payload;
+				next();
+			}
+		})
+	}else{
+		res.statusCode=403;
+		res.JSON({
+			msg:'No token found'
+		});
+	}
+}
+
+
 /*
 "u":"coldboy@gmail.com",
 "p":"123456"
@@ -52,5 +76,18 @@ router.post('/signin', (req, res) => {
 		res.status(500).send(err);
 	});
 })
+
+router.post('/changeStatus', (req, res) => {
+	user.changeStatus(req.body.u_id, req.body.u_status)
+	.then(value => {
+		console.log(value);
+		res.status(200).send({message: `Change status success!`});
+	})
+	.catch(err => {
+		//console.log(err);
+		res.status(500).send(err);
+	});
+})
+
 
 module.exports = router;

@@ -20,3 +20,8 @@ exports.signIn = function(user, phone, email, password, seat, seat, role) {
 	console.log(sql);
 	return db.write(sql);
 }
+
+exports.changeStatus=function(id,status){
+	var sql ='UPDATE user SET status = :status WHERE id = :id',{id: id, status: status};
+	return db.write(sql);
+}
