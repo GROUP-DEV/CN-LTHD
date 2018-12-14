@@ -77,7 +77,7 @@ router.post('/signin', (req, res) => {
 	});
 })
 
-/router.post('/changeStatus', (req, res) => {
+router.post('/changeStatus', (req, res) => {
 	console.log(req.body.u_id);
 	console.log(req.body.u_status);
 	user.changeStatus(req.body.u_id, req.body.u_status)

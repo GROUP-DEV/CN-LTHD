@@ -67,6 +67,20 @@ router.post('/bookcar',verifyAccess ,(req, res) => {
 	});
 })
 
+
+router.post('/getRequestFromPhone',verifyAccess ,(req, res) => {
+	book.getRequestFromPhone(req.body.phone_customer)
+	.then(rows => {
+		res.status(200).send(JSON.stringify(rows));
+	})
+	.catch(err => {
+		console.log(err);
+		res.status(400).send(JSON.stringify(err));
+	});
+})
+
+
+
 router.get('/',verifyAccess ,(req, res) => {
 	book.getAll()
 	.then(rows => {
