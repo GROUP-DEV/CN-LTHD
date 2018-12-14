@@ -3,7 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import moment from 'moment'
 import * as VueGoogleMaps from 'vue2-google-maps'
+// google Map
 Vue.use(VueGoogleMaps, {
 		load: {
 		key: 'AIzaSyCHY7K0nxdBJ2MVMMVe46mJP8PvoezIUvc',
@@ -15,22 +17,15 @@ Vue.use(VueGoogleMaps, {
 		//// If you want to set the version, you can do so:
 		// v: '3.26',
 		},
+});
+
+// format Date
+Vue.filter('formatDate', function(value) {
+  if (value) {
+    return moment(String(value)).format('MM/DD/YYYY hh:mm')
+  }
 })
 
-// require('./assets/css/bootstrap.min.css');
-// require('./assets/font-awesome/css/font-awesome.css');
-// require('./assets/css/sb-admin.css');
-// // require('./assets/css/custom.css');
-// require('./assets/css/style.css');
-
-
-// require('./assets/js/vue.js');
-// require('./assets/js/jquery-1.10.2.js');
-// require('./assets/js/bootstrap.min.js');
-// require('./assets/js/plugins/metisMenu/jquery.metisMenu.js');
-// require('./assets/js/sb-admin.js');
-// require('./assets/js/jquery-ui.js');
-// require('./assets/js/custom.js');
 
 export const eventBus = new Vue();
 Vue.config.productionTip = false

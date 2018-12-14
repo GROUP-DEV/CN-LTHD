@@ -103,24 +103,27 @@ a.nav-link.cl-regist:focus .d-login {
     <!-- START SIGN UP -->
     <div class="d-sign" v-if="isCheckRegister">
       <h2 class="text-center">Sign up</h2>
-      <div class="form-group">
-        <input type="Email" name="txtName" class="form-control" placeholder="Email" value="" />
-      </div>
-      <div class="form-group">
-        <input type="password" name="txtPassword" class="form-control" placeholder="Password" value="" />
-      </div>
-      <div class="form-group">
-        <input type="password" name="txtConfirmPassword" class="form-control" placeholder="Confirm Password" value="" />
-      </div>
-      <div class="form-group">
-        <input type="text" name="txtUsername" class="form-control" placeholder="Username" value="" />
-      </div>
-      <div class="form-group">
-        <input type="text" name="txtPhone" class="form-control" placeholder=" Phone Number" value="" />
-      </div>
-      <div class="form-group">
-        <button type="submit" class="btn btn-login float-right">send</button>
-      </div>
+       <form action="" method="post" v-on:submit.prevent="regist">
+        <div class="form-group">
+          <input type="Email" name="txtName" class="form-control" placeholder="Email"  v-model="formregist.u_mail" />
+        </div>
+        <div class="form-group">
+          <input type="password" name="txtPassword" class="form-control" placeholder="Password"  v-model="formregist.u_pass"/>
+        </div>
+        <div class="form-group">
+          <input type="password" name="txtConfirmPassword" class="form-control" placeholder="Confirm Password" v-model="formregist.ConfirmPassword" />
+        </div>
+        <div class="form-group">
+          <input type="text" name="txtUsername" class="form-control" placeholder="Họ Và Tên"  v-model="formregist.u_name" />
+        </div>
+        <div class="form-group">
+          <input type="text" name="txtPhone" class="form-control" placeholder=" Phone Number"  v-model="formregist.u_phone"/>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-login float-right">send</button>
+        </div>
+      </form>
+
     </div>
 
     <!-- END UP -->
@@ -154,7 +157,7 @@ a.nav-link.cl-regist:focus .d-login {
             return {
                 isCheckLogin: true,
                 isCheckRegister: false,
-                formdata:{u:'truongvanhau911995@gmail.com',p:'123456'},//u:'htkh17hcb@gmail.com',p:'0908325568'
+                formdata:{u:'request@gmail.com',p:'123456'},//u:'htkh17hcb@gmail.com',p:'0908325568'
                 formregist:{},
                 msg:'',
                 center: { lat: 10.7680949, lng: 106.6739531 },
@@ -167,6 +170,7 @@ a.nav-link.cl-regist:focus .d-login {
             //this.geolocate();
             //this.addMarker();
         },
+        
         methods: {
                 changeIsCheckLogin: function(){
                     this.isCheckLogin = !this.isCheckLogin;
@@ -185,12 +189,31 @@ a.nav-link.cl-regist:focus .d-login {
                     this.axios.post("http://172.28.77.1:1742/u/login/",this.formdata)
                     .then((response) => {
                         console.log(response.data);
-                        if(response.data.user.group_user == 0){
+                        if(response.data.user.group_user == 1){
                             //$router.push({ path: '/render/' });
+                            localStorage.setItem('key',JSON.stringify(response.data));
+
+
                              this.$router.push({path: 'request'});
                              console.log(this.msg);
-                        }else{
-                            alert('Ten dang nhap va mat khau khong ton tai');
+                             return;
+                        }
+                        if(response.data.user.group_user == 2){
+                            //$router.push({ path: '/render/' });
+                            localStorage.setItem('key',JSON.stringify(response.data));
+                             this.$router.push({path: 'location'});
+                             console.log(this.msg);
+                             return;
+                        }
+                         if(response.data.user.group_user == 3){
+                            //$router.push({ path: '/render/' });
+                            localStorage.setItem('key',JSON.stringify(response.data));
+                             this.$router.push({path: 'management'});
+                             console.log(this.msg);
+                             return;
+                        }
+                        else{
+                            alert('Ten dang nhap va mat khau khong ton tai!!');
                         }
                      }).catch(err => {
                          alert('Ten dang nhap va mat khau khong ton tai');
@@ -199,22 +222,23 @@ a.nav-link.cl-regist:focus .d-login {
 
                 // DANG KY
                 regist(){
-                    if(this.formregist.pw==null || this.formregist.email==null || this.formregist.phone==null || this.formregist.uname == null){
+                    if(this.formregist.u_pass==null || this.formregist.u_mail==null || this.formregist.u_phone==null || this.formregist.u_name == null){
                         alert('dữ liệu không được rỗng!!');
                         return;
                     }
-                    if(this.formregist.ConfirmPassword != this.formregist.pw){
+                    if(this.formregist.ConfirmPassword != this.formregist.u_pass){
                         alert('Nhập lại password bị sai!');
                         return;
                     }
-                    this.axios.post("http://172.28.77.1:1742/user/register",this.formregist)
+                    this.axios.post("http://172.28.77.1:1742/u/signin",this.formregist)
                     .then((response) => {
-                        this.formregist.pw =null;
-                        this.formregist.email =null;
-                        this.formregist.phone=null;
-                         this.formregist.uname =null;
-                         this.formregist.ConfirmPassword =null;
+                      console.log(response);
                         alert(response.data.message);
+                        this.formregist.u_pass =null;
+                        this.formregist.u_mail =null;
+                        this.formregist.u_phone=null;
+                        this.formregist.u_name =null;
+                        this.formregist.ConfirmPassword =null;
                      }).catch(err => {
                         console.log(err)
                     })

@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "jwt-decode": "^2.2.0",
+    "moment": "^2.23.0",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.4",
     "vue-jwt-decode": "^0.1.0",

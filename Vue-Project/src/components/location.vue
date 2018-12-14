@@ -321,7 +321,7 @@
         </form>
         <ul class="navbar-nav mr-auto my-lg-0">
           <li class="nav-item">
-            <a class="nav-link " href="#">Trương Văn Hậu {{center.lat}} {{center.lng}}</a>
+            <a class="nav-link " href="#">{{lgName.user.fullname}}</a>
           </li> 
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -333,7 +333,7 @@
               <a class="dropdown-item" href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
               <a class="dropdown-item" href="#"> setting</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#"><i class="fas fa-sign-in-alt"></i> Logout</a>
+              <a class="dropdown-item" href="#" @click="logout"><i class="fas fa-sign-in-alt"></i> Logout</a>
             </div>
           </li>
         </ul>
@@ -341,9 +341,7 @@
     </nav>
     <!-- notification : start -->
     <div class="row">
-                  <!-- <div class="slide">
-                      <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    </div> -->
+               
                     <div class="col-sm-12" id="notification">
                       <table class="table table-striped table-bordered">
                         <thead>
@@ -351,6 +349,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Name</th>
                             <th scope="col">Phone</th>
+                             <th scope="col">Time</th>
                             <th scope="col">Address</th>
                             <th scope="col">Note</th>
                             <th scope="col"></th>
@@ -358,15 +357,13 @@
                         </thead>
                         <tbody>
                           <tr v-for="Items in formdata">
-                            <th scope="row">{{Items.ID}}</th>
-                            <td>{{Items.Name}}</td>
-                            <td>{{Items.Phone}}</td>
-                            <td >{{Items.Address}}
-                                <!-- <gmap-place-input :default-place="Items.Address" v-model="searchAddressInput"
-                                  @place_changed="setPlace">
-                                </gmap-place-input> -->
+                            <th scope="row"></th>
+                            <td>{{Items.customer_name}}</td>
+                            <td>{{Items.customer_phone}}</td>
+                            <td >{{Items.address}}</td>
+                            <td >{{Items.time | formatDate}}
                             </td>
-                             <td>{{Items.Note}}</td>
+                             <td>{{Items.note}}</td>
                             <td>
                               <button class="btn btn-primary detail" @click="selectDetail(Items.Address)">Detail</button>
                             </td>
@@ -409,6 +406,8 @@
                   <li>Note  &nbsp;&nbsp;&nbsp;&nbsp;   : <span>1234567890</span></li>
                   <li>Lat &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  : <span>{{center.lat}}</span></li>
                   <li>lng &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;  : <span>{{center.lng}}</span></li>
+                  <li><hr/></li>
+                  <li><button class="btn btn-primary" type="button" id="btntimxe">Tìm Xe</button></li>
                 </ul>
               </div>
             </div>
@@ -451,13 +450,15 @@
     });
        export default{
         data(){
+            var name = JSON.parse(localStorage.getItem('key'));
             return {
+                lgName:name,
                 isshowdetail: '',
                 isclose: '',
                 formdata:[
-                          {ID:1,Name:'truongvanhau911995@gmail.com',Phone:'0389194021',Address:'227 Nguyễn Văn Cừ, phường 4, Quận 5, Hồ Chí Minh, Việt Nam',Note:'xin chào mọi người'},
-                          {ID:2,Name:'Hậu hero',Phone:'0389194021',Address:'384 lý thái tổ, phương 10, quận 10, tp.hồ chí minh',Note:'xin chào mọi người'},
-                          {ID:3,Name:'Hậu 2',Phone:'0389194021',Address:'500 lý thái tổ, phương 12, quận 10, tp.hồ chí minh',Note:'xin chào mọi người'},
+                          // {ID:1,Name:'truongvanhau911995@gmail.com',Phone:'0389194021',Address:'227 Nguyễn Văn Cừ, phường 4, Quận 5, Hồ Chí Minh, Việt Nam',Note:'xin chào mọi người'},
+                          // {ID:2,Name:'Hậu hero',Phone:'0389194021',Address:'384 lý thái tổ, phương 10, quận 10, tp.hồ chí minh',Note:'xin chào mọi người'},
+                          // {ID:3,Name:'Hậu 2',Phone:'0389194021',Address:'500 lý thái tổ, phương 12, quận 10, tp.hồ chí minh',Note:'xin chào mọi người'},
                           ],
                 center: {lat: 10.7680949, lng: 106.6739531 },//lat: 10.7680949, lng: 106.6739531 },
                 markers: [{position:{lat: 10.7680949, lng: 106.6739531}}],
@@ -466,10 +467,14 @@
             }
         },
         mounted () {
-            //this.geolocate();
+            this.loadRequest();
             //this.addMarker();
         },
         methods: {
+                logout(){
+                    localStorage.removeItem('key');
+                    window.location.replace('http://localhost:8080/#/');
+                },
                 showDetail: function(){
                     this.isshowdetail = 'show-detail ';
                    // this.isclose = '';
@@ -491,27 +496,32 @@
                         this.markers[0].position.lng = results[0].geometry.location.lng();
                       //}
                     });
-                   //this.setPlace(Id);
-                  //   this.axios.get(VueGoogleMaps, {
-                  //     load: {
-                  //     key: 'AIzaSyCHY7K0nxdBJ2MVMMVe46mJP8PvoezIUvc',
-                  //     libraries: Id, // This is required if you use the Autocomplete plugin
-                  //     },
-                  //  })
-                  // .then((response)=>{
-                  // // Log full response
-            
-                  // var ln = response.data.results[0].geometry.location.lng;
-                  // //this.lng = ln;
-                  //  // this.location.lat = response.data.results[0].geometry.location.lat;
-                  //   //this.lng = response.data.results[0].geometry.location.lng;
-                  // console.log(response.data);
-                  // })
-                  // .catch(function(error){
-                  //   console.log(error);
-                  // });
-
                 },
+                loadRequest(){
+                   this.axios.get('http://172.28.77.1:1742/b/')   
+                    .then(response =>{
+                        this.formdata = response.data; 
+                    })
+                    .catch(function(error){
+                        console.log(error);
+                    })
+                },
+                formatDate:function(date) {
+                    var days=new Array("Chủ nhật","Thứ hai","Thứ 3","Thứ 4","Thứ 5","Thứ 6","Thứ 7");
+                    var months=new Array("1","2","3","4","5","6","7","8","9","10","11","12");
+                    var hours = date.getHours();
+                    var minutes = date.getMinutes();
+                    var day=date.getDay();
+                    var d=date.getDate();
+                    var month=date.getMonth();
+                    var year=date.getFullYear();
+                    var ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; // the hour '0' should be '12'
+                    minutes = minutes < 10 ? '0'+minutes : minutes;
+                    var strTime =days[day] + " Ngày " + d + "/" +months[month] + "/" + year +'  -- '+ hours + ':' + minutes + ' ' + ampm;
+                    return strTime;
+                },   
                 setPlaceText(place) {
                   this.place = place;
                 },

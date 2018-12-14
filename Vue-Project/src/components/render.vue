@@ -19,7 +19,7 @@
 
 import Home from './home.vue'
 export default {
-  name: 'render',
+  //name: 'render',
   components: {
     'Home': Home
   }
