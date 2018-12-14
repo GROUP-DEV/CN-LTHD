@@ -395,7 +395,6 @@
         export default{
             data(){
                  var name = JSON.parse(localStorage.getItem('key'));
-                 console.log(name);
                 return {
                    // description: '',
                     isCheckLogin: true,
@@ -424,7 +423,7 @@
                         alert('dữ liệu không được rỗng!!');
                         return;
                     }
-                    this.axios.post("http://172.28.77.1:1742/b/bookcar",this.infoRequest)
+                    this.axios.post("http://172.0.0.1:1742/b/bookcar",this.infoRequest)
                     .then((response) => {
                         alert(response.data.message);
                         this.infoRequest.b_name =null;

@@ -498,7 +498,7 @@
                     });
                 },
                 loadRequest(){
-                   this.axios.get('http://172.28.77.1:1742/b/')   
+                   this.axios.get('http://172.0.0.1:1742/b/')   
                     .then(response =>{
                         this.formdata = response.data; 
                     })

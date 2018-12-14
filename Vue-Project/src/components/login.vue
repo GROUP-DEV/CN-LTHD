@@ -180,20 +180,18 @@ a.nav-link.cl-regist:focus .d-login {
                     this.isCheckLogin = !this.isCheckLogin;
                     this.isCheckRegister = !this.isCheckRegister;
                 },
-                login(){// chuoi json can nhan {success: 1, email: "hotdau1@yahoo.com", fullname: "anh yêu"}
+                login(){
                     console.log(this.formdata);
                     if(this.formdata.u==null || this.formdata.p ==null){
                         alert('Email and Password not null!!!');
                         return;
                     }
-                    this.axios.post("http://172.28.77.1:1742/u/login/",this.formdata)
+                    this.axios.post("http://172.0.0.1:1742/u/login/",this.formdata)
                     .then((response) => {
                         console.log(response.data);
                         if(response.data.user.group_user == 1){
                             //$router.push({ path: '/render/' });
                             localStorage.setItem('key',JSON.stringify(response.data));
-
-
                              this.$router.push({path: 'request'});
                              console.log(this.msg);
                              return;
@@ -230,7 +228,7 @@ a.nav-link.cl-regist:focus .d-login {
                         alert('Nhập lại password bị sai!');
                         return;
                     }
-                    this.axios.post("http://172.28.77.1:1742/u/signin",this.formregist)
+                    this.axios.post("http://172.0.0.1:1742/u/signin",this.formregist)
                     .then((response) => {
                       console.log(response);
                         alert(response.data.message);
