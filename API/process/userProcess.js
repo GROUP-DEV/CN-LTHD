@@ -12,7 +12,7 @@ exports.logIn = function(user, pass) {
 	return db.load(sql);
 }
 
-exports.signIn = function(user, phone, seat, email, password, role) {
+exports.signIn = function(user, phone, email, password, seat, seat, role) {
 
 	var sql = `INSERT INTO user (username, phone, seat, email, password, role) VALUES 
 ('${user ? user : ''}', '${phone}', '${seat ? seat : '0'}', '${email}', MD5('${password}'), '${role ? role : `-1`}');`;
@@ -21,7 +21,7 @@ exports.signIn = function(user, phone, seat, email, password, role) {
 	return db.write(sql);
 }
 
-exports.changeStatus=function(id,status){
-	var sql ='UPDATE user SET status = :status WHERE id = :id',{id: id, status: status};
+exports.changeStatus=function(u_id,u_status){
+	var sql ="UPDATE user set status = '" + u_status + "' WHERE id = '" + u_id + "'";
 	return db.write(sql);
 }

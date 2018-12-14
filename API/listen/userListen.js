@@ -1,6 +1,6 @@
 var express = require('express');
 var jwt=require('jsonwebtoken');
-user = require('../process/userProcess');
+var user = require('../process/userProcess');
 var router = express.Router();
 
 var verifyAccess=(req,res,next)=>{
@@ -77,7 +77,9 @@ router.post('/signin', (req, res) => {
 	});
 })
 
-router.post('/changeStatus', (req, res) => {
+/router.post('/changeStatus', (req, res) => {
+	console.log(req.body.u_id);
+	console.log(req.body.u_status);
 	user.changeStatus(req.body.u_id, req.body.u_status)
 	.then(value => {
 		console.log(value);

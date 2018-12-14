@@ -1,7 +1,7 @@
-var express = require('express'),
-book = require('../process/bookProcess'),
-geocoding = require('../other/google_maps'), 
-var jwt=require('jsonwebtoken'),
+var express = require('express');
+book = require('../process/bookProcess');
+geocoding = require('../other/google_maps'); 
+var jwt=require('jsonwebtoken');
 geocode = require('../process/geocodeProcess');
 var router = express.Router();
 
