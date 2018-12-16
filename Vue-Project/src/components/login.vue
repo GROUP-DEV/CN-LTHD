@@ -186,7 +186,7 @@ a.nav-link.cl-regist:focus .d-login {
                         alert('Email and Password not null!!!');
                         return;
                     }
-                    this.axios.post("http://172.0.0.1:1742/u/login/",this.formdata)
+                    this.axios.post("http://localhost:1742/u/login/",this.formdata)
                     .then((response) => {
                         console.log(response.data);
                         if(response.data.user.group_user == 1){
@@ -228,7 +228,7 @@ a.nav-link.cl-regist:focus .d-login {
                         alert('Nhập lại password bị sai!');
                         return;
                     }
-                    this.axios.post("http://172.0.0.1:1742/u/signin",this.formregist)
+                    this.axios.post("http://localhost:1742/u/signin",this.formregist)
                     .then((response) => {
                       console.log(response);
                         alert(response.data.message);

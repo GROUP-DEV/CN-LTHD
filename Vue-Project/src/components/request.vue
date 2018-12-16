@@ -423,7 +423,7 @@
                         alert('dữ liệu không được rỗng!!');
                         return;
                     }
-                    this.axios.post("http://172.0.0.1:1742/b/bookcar",this.infoRequest)
+                    this.axios.post("http://location:1742/b/bookcar",this.infoRequest)
                     .then((response) => {
                         alert(response.data.message);
                         this.infoRequest.b_name =null;

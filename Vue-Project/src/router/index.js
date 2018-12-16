@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import VueAxios from 'vue-axios';
-import axios from 'axios';
 
-Vue.use(VueAxios,axios);
 
 //import HelloWorld from '@/components/HelloWorld'
 //import home from '../components/home.vue';

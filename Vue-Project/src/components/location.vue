@@ -365,7 +365,7 @@
                             </td>
                              <td>{{Items.note}}</td>
                             <td>
-                              <button class="btn btn-primary detail" @click="selectDetail(Items.Address)">Detail</button>
+                              <button class="btn btn-primary detail" @click="selectDetail(Items.customer_phone)">Detail</button>
                             </td>
                           </tr>
                         </tbody>
@@ -455,11 +455,8 @@
                 lgName:name,
                 isshowdetail: '',
                 isclose: '',
-                formdata:[
-                          // {ID:1,Name:'truongvanhau911995@gmail.com',Phone:'0389194021',Address:'227 Nguyễn Văn Cừ, phường 4, Quận 5, Hồ Chí Minh, Việt Nam',Note:'xin chào mọi người'},
-                          // {ID:2,Name:'Hậu hero',Phone:'0389194021',Address:'384 lý thái tổ, phương 10, quận 10, tp.hồ chí minh',Note:'xin chào mọi người'},
-                          // {ID:3,Name:'Hậu 2',Phone:'0389194021',Address:'500 lý thái tổ, phương 12, quận 10, tp.hồ chí minh',Note:'xin chào mọi người'},
-                          ],
+                formdata:[],
+                fromDetail:{},
                 center: {lat: 10.7680949, lng: 106.6739531 },//lat: 10.7680949, lng: 106.6739531 },
                 markers: [{position:{lat: 10.7680949, lng: 106.6739531}}],
                 places: [],
@@ -469,6 +466,7 @@
         mounted () {
             this.loadRequest();
             //this.addMarker();
+
         },
         methods: {
                 logout(){
@@ -483,22 +481,22 @@
                     this.isshowdetail = 'hide-detail';
 
                 },
-                selectDetail(ID){
+                selectDetail(phone){
                    this.isshowdetail = 'show-detail ';
-                   alert(ID);
-                   var geocoder = new google.maps.Geocoder();
-                   geocoder.geocode({'address': ID}, (results, status) => {
-                    console.log(results);
-                      //if (status === 'OK') {
-                        this.center.lat = results[0].geometry.location.lat();
-                        this.center.lng = results[0].geometry.location.lng();
-                        this.markers[0].position.lat = results[0].geometry.location.lat();
-                        this.markers[0].position.lng = results[0].geometry.location.lng();
-                      //}
-                    });
+                   alert(phone);
+                   this.axios.defaults.headers.common['x-access-token'] =this.lgName.access_token;
+                   this.axios.post("http://localhost:1742/b/getRequestFromPhone",{'phone_customer':phone})
+                    .then((response) => {  
+                        
+                         this.fromDetail = response.data; 
+                         console.log(fromDetail);
+                     }).catch(err => {
+                        console.log(err)
+                    })
                 },
                 loadRequest(){
-                   this.axios.get('http://172.0.0.1:1742/b/')   
+                   this.axios.defaults.headers.common['x-access-token'] =this.lgName.access_token;
+                   this.axios.get('http://localhost:1742/b/')   
                     .then(response =>{
                         this.formdata = response.data; 
                     })
