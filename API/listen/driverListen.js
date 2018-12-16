@@ -4,41 +4,20 @@ var server = http.Server(require('express')());
 var wss = require('socket.io')(server);
 
 var listDrive = [];
-
+/**
+* 1 key socket has m_info is:
+    name: name driver
+    latilate, longilate
+*/
 wss.on('connection', socket => {
-
+    // input info object: name, latitude,longitude
+    socket.on('sent_info', info => {
+        socket.m_info = info;
+        listDrive.push(socket);
+    });
 });
+
 var port = process.env.port || 2471;
 server.listen(port, () => {
-	console.log(`Running socket with port ${port}...`);
+    console.log(`Running socket with address ${process.env.port ? require('ip').address() : ${port}...`);
 });
-/*var distance = require('google-distance-matrix');
-
-var origins = ['San Francisco CA', '40.7421,-73.9914'];
-var destinations = ['New York NY', 'Montreal', '41.8337329,-87.7321554', 'Honolulu'];
-
-distance.key('AIzaSyCHY7K0nxdBJ2MVMMVe46mJP8PvoezIUvc');
-distance.units('metric');
-
-distance.matrix(origins, destinations, function (err, distances) {
-    if (err) {
-        return console.log(err);
-    }
-    if(!distances) {
-        return console.log('no distances');
-    }
-    if (distances.status == 'OK') {
-        for (var i=0; i < origins.length; i++) {
-            for (var j = 0; j < destinations.length; j++) {
-                var origin = distances.origin_addresses[i];
-                var destination = distances.destination_addresses[j];
-                if (distances.rows[0].elements[j].status == 'OK') {
-                    var distance = distances.rows[i].elements[j].distance.text;
-                    console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance);
-                } else {
-                    console.log(destination + ' is not reachable by land from ' + origin);
-                }
-            }
-        }
-    }
-});*/

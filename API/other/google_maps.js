@@ -1,32 +1,49 @@
+var distance = require('google-distance-matrix');
 var nodegeocoder = require('node-geocoder'),
 db = require('./cnt_mysql');
 
 var options = {
-	provider: 'google',
-	httpAdapter: 'https',
-	apiKey: 'AIzaSyCHY7K0nxdBJ2MVMMVe46mJP8PvoezIUvc',
-	formatter: null
+    provider: 'google',
+    httpAdapter: 'https',
+    apiKey: 'AIzaSyCHY7K0nxdBJ2MVMMVe46mJP8PvoezIUvc',
+    formatter: null
 };
 
 var geocoder = nodegeocoder(options);
 
 exports.getGeoCoding = function(address) {
-	/*geocoder.geocode(address, (err, res) => {
-		var value_release = 888;
-		if(err) throw err;
-		console.log(res);
-		db.load(`SELECT id FROM geocode WHERE latitude LIKE '${res[0].latitude}' AND longitude LIKE '${res[0].longitude}'`, (err, rows) => {
-			if(err) throw err;
-			console.log('List geocode: \n'+rows);
-			if(rows.length == 1) var value_release = rows[0].id;
-			else {
-				console.log(`INSERT INTO geocode (latitude, longitude) VALUES ('${res[0].latitude}', '${res[0].longitude}')`);
-				db.write(`INSERT INTO geocode (latitude, longitude) VALUES ('${res[0].latitude}', '${res[0].longitude}')`, (err, value) => {
-					if(err) throw err;
-					var value_release = value.insertId;
-				});
-			}
-		});
-	});*/
-	return geocoder.geocode(address);
+    return geocoder.geocode(address);
+}
+exports.calculatorDistance = function(from, to) {
+    var origins = [from];
+    var destinations = [to];
+
+    distance.key(options.apiKey);
+    distance.units('metric');
+
+    distance.matrix(origins, destinations, function (err, distances) {
+        if (err) {
+            return console.log(err);
+        }
+        if(!distances) {
+            return console.log('no distances');
+            return 0;
+        }
+        if (distances.status == 'OK') {
+            for (var i=0; i < origins.length; i++) {
+                for (var j = 0; j < destinations.length; j++) {
+                    var origin = distances.origin_addresses[i];
+                    var destination = distances.destination_addresses[j];
+                    if (distances.rows[0].elements[j].status == 'OK') {
+                        var distance = distances.rows[i].elements[j].distance.text;
+                        console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance);
+                        return parsFloat(distance.replace(' km', '').replace(/,/g, ''));
+                    } else {
+                        console.log(destination + ' is not reachable by land from ' + origin);
+                        return 0;
+                    }
+                }
+            }
+        }
+    });
 }

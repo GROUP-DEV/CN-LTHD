@@ -12,7 +12,7 @@ exports.add = function(lat,lon) {
 }
 
 exports.getGeoId = function(lat,lon) {
-	return this.getGeoCoding(lat, lon)
+	return this.get(lat, lon)
 	.then(rows => {
 		if(rows.length == 1)
 			return rows[0].id;
@@ -20,7 +20,7 @@ exports.getGeoId = function(lat,lon) {
 	})
 	.then(value => {
 		if(value = '-1'){
-			return this.addGeoCoding(lat,lon);
+			return this.add(lat,lon);
 		}
 		return value;
 	})

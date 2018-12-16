@@ -77,5 +77,5 @@ require('./listen/driverListen');
 var port = process.env.port || 1742;
 app.listen(port, () => {
 	console.log(`Running...`);
-	console.log(`Open with address: ${require('ip').address()}:${port}`);
+	console.log(`Open with address: ${process.env.port ? require('ip').address() : 'localhost'}:${port}`);
 });
