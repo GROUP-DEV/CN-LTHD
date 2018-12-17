@@ -1,14 +1,6 @@
 var db = require('../other/cnt_mysql'),
 var map = require('../other/google_maps');
 
-exports.logIn= function(user, pass) {
-	let sql = `SELECT * 
-FROM user 
-WHERE role = 4 
-AND (MD5(phone) LIKE MD5('${user}') OR MD5(email) LIKE MD5('${user}')) 
-AND password like MD5('${pass}');`;
-	return db.load(sql);
-}
 exports.getListBookedCarInStatuLocated = function() {
 	let sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', 
 BookCar.address 'welcome_address', BookCar.note, BookCar.status, BookCar.seats, BookCar.time 'time_request', 
@@ -23,4 +15,12 @@ WHERE BookCar.status LIKE N'đã định vị xong';`;
 
 exports.distance = function(from, to) {
 	return map.calculatorDistance(from, to);
+}
+
+exports.updateLocationCurrent = function(id_user, latitude, longitude) {
+	let sql = `UPDATE user 
+SET latitude = '${ latitude }', 
+longitude = '${ longitude }' 
+WHERE id =  '${ id_user }'`;
+	return db.write(sql);
 }
