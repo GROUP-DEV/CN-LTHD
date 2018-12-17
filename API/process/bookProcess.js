@@ -1,7 +1,11 @@
 var db = require('../other/cnt_mysql');
 
 exports.loadAll = function() {
-	var sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', BookCar.address 'welcome_address', BookCar.note, BookCar.seats, BookCar.time 'time_request', g1.latitude 'geocoding_lat', g1.longitude 'geocoding_lon', g2.latitude 'reverse_geocoding_lat', g2.longitude 'reverse_geocoding_lon' FROM BookCar INNER JOIN customer ON BookCar.customer = customer.id LEFT JOIN geocode g1 ON BookCar.geocodin = g1.id LEFT JOIN geocode g2 ON BookCar.regeocoding = g2.id LEFT JOIN user ON BookCar.biker = user.id`;
+	var sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', address, note, g1.latitude 'geo_lat', g1.longitude 'geo_lon', g2.latitude 're_geo_lat', g2.longitude 're_geo_lon', biker, time, BookCar.status, seats 
+FROM BookCar JOIN geocode g1 ON BookCar.geocodin = g1.id
+JOIN geocode g2 ON BookCar.regeocoding = g2.id
+JOIN customer ON BookCar.customer = customer.id
+LEFT JOIN user ON user.id = BookCar.biker`;
 
 	return db.load(sql);
 }
