@@ -40,7 +40,7 @@ router.post('/login', (req, res) => {
 				user: userAuth,
 			}
 			var acToken=jwt.sign(payload,'7avodoilc',{
-				expiresIn: 180
+				expiresIn: '5m'
 			});
 			var rfToken='';
 			res.json({
