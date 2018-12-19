@@ -1,5 +1,5 @@
 var db = require('../other/cnt_mysql'),
-var map = require('../other/google_maps');
+map = require('../other/google_maps');
 
 exports.getListBookedCarInStatuLocated = function() {
 	let sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', 
