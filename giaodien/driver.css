@@ -1,121 +1,98 @@
-html,body{
-    margin: 0;
-    padding: 0;
-    font-family: segoe ui;
-    width: 100%;
-    height: 100%;
-}
-
 .wrapper-driver{
-    display: inline-block;
-    margin: 0;
-    padding: 0 30px;
-    width: 100%;
-    height: 100%;
-    background-color: #f3f3f3;
-    overflow: hidden;
-}
-
-.wrapper-driver .brand{
-    width: 100%;
-    margin-top: 30px;
-    text-align: center;
     display: flex;
-    justify-content: center;
-}
-.wrapper-driver .brand .logo{
-    width: 193px;
-    height: 132px;
-}
-.wrapper-driver .brand img{
-    width: 100%;
-    height: 100%;
+    padding-top: 87px;
+    padding-bottom: 80px;
+    padding-left: 41px;
+    padding-right: 40px;
+    width: 767px;
+    height: 1024px;
+    background: url(./images/pad-port.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    margin: 0 auto;
 }
 
-
-/* --------------------------------------------------------------- */
-.wrapper-driver .status-notification {
+/* ba nút : bắt đầu, đang di chuyển, kết thúc */
+.wrapper-button{
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 30px 0;
+    padding: 10px 5px;
 }
-.wrapper-driver .status-notification .notification{
-    display: inline-block;
-    color: #1e90ff;
-    cursor: pointer;
-    position: relative;
-    font-size: 20px;
-}
-.wrapper-driver .status-notification .notification span{
-    position: absolute;
-    top: -5px;
-    left: 10px;
-    display: inline-block;
-    color: #fff;
-    font-size: 12px;
-    background-color: red;
-    padding: 0 5px;
-    border-radius: 2px;
-}
-.wrapper-driver .status-notification .status{
-    display: inline-block;
-}
+/* ba nút : bắt đầu, đang di chuyển, kết thúc */
 
-/* ------------------------------------------------------------------- */
-.wrapper-driver .notification-view{
-    position: absolute;
-    top: 275px;
-    left: 0;
+
+/* thông tin : hình ảnh, tên, trạng thái */
+.info-driver{
     width: 100%;
-    height: 245px;
-    z-index: 1000;
-    padding: 0 30px;
-    transition: 1s;
-    transform: scale(0);
-    transform-origin: 100px 0;
-}
-.show-notification-view{
-    transform: scale(1) !important;
-}
-.wrapper-driver .notification-view .list-view{
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    overflow: hidden;
-    overflow-y: scroll;
-}
-/* ----------------------------------------------------------------- */
-
-#map{
-    width: 100%;
-    height: 240px;
-}
-
-/* ------------------------------------------------------------------- */
-
-.wrapper-driver .location-driver{
-    padding: 30px 0 0 0 ;
-}
-
-/* -------------------------------------------------------------------- */
-
-.wrapper-driver .logout{
+    height: 200px;
+    background-color: #3d5de6;
     display: flex;
     justify-content: center;
-    
+    align-items: center;
+    flex-direction: column;
+}
+.info-driver span{
+    margin-top: 20px;
 }
 
-
-
-
-
-@media (min-width: 376px){
-    .wrapper-driver{
-        margin-top: 50px;
-        margin-left: 50%;
-        transform: translateX(-50%);
-        width: 375px;
-        height: 667px;
-    }
+.portrait{
+    width: 60px;
+    height: 60px;
+    background-color: grey;
+    border-radius: 50%;
 }
+
+.info-driver .driver-status{
+    padding: 0 5px;
+}
+.info-driver select{
+    font-family: segoe ui;
+    font-size: 15px;
+    border-radius: 5px;
+}
+/* thông tin : hình ảnh, tên, trạng thái */
+
+
+.wrapper-driver #content{
+    padding: 0;
+    position: relative;
+    font-family: segoe ui;
+    display: flex;
+    flex-direction: column;
+}
+/* thông báo: start */
+.wrapper-driver #content .wrapper-notification {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(156, 156, 156, 0.37);
+    transition: 1s;
+    transform: scale(0);
+    transform-origin: 0 0;
+}
+.show-wrapper-notification{
+    transform: scale(1) !important;
+}
+.wrapper-driver #content .wrapper-notification .notification{
+    position: absolute;
+    left: 20%;
+    top: 100px;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+.wrapper-driver #content .wrapper-notification .notification .agree{
+    background-color: #74b9ff;
+    padding: 0 5px;
+    color: #fff;
+}
+.wrapper-driver #content .wrapper-notification .notification .refuse{
+    background-color: #74b9ff;
+    padding: 0 5px;
+    color: #fff;
+}
+/* thông báo: end */
+
+

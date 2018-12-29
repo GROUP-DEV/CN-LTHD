@@ -328,7 +328,7 @@
                         </form>
                         <ul class="navbar-nav mr-auto my-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link " href="#">Trương Văn Hậu</a>
+                                <a class="nav-link " href="#">{{lgName.user.fullname}}</a>
                             </li> 
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -339,7 +339,7 @@
                                     <a class="dropdown-item" href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
                                     <a class="dropdown-item" href="#"> setting</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#"><i class="fas fa-sign-in-alt"></i> Logout</a>
+                                    <a class="dropdown-item" href="#" @click="logout"><i class="fas fa-sign-in-alt"></i> Logout</a>
                                 </div>
                             </li>
                         </ul>
@@ -361,30 +361,28 @@
                                 <div class="title">
                                     NHẬP THÔNG TIN KHÁCH
                                 </div>
-                                <form style="text-align: center">
+                                <form style="text-align: center" action="" method="post" v-on:submit.prevent="sendRequest">
                                     <div class="form-group">
-                                        <input type="email" class="form-control" id="name" placeholder="Name"/>
+                                        <input type="text" class="form-control" id="name" placeholder="Name" v-model="infoRequest.b_name"/>
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="phone" placeholder="Phone"/>
+                                        <input type="text" class="form-control" id="phone" placeholder="Phone" v-model="infoRequest.b_phone"/>
                                     </div>
                                       <div class="form-group">
                                         <!-- <input type="password" class="form-control" id="address" placeholder="Address"/> -->
-                                            <gmap-autocomplete
+                                            <gmap-autocomplete  
                                               class="form-control"
-                                              :value="description"
                                               @place_changed="setPlace"
                                               :options="{
-                                              
                                                 bounds: {north: 102.170435826, south: 8.59975962975, east: 109.33526981, west: 23.3520633001},
                                                 strictBounds: true
                                               }">
                                             </gmap-autocomplete>
                                     </div>
                                     <div class="form-group">
-                                        <textarea class="form-control" id="note" cols="30" rows="5" placeholder="Note"></textarea>
+                                        <textarea v-model="infoRequest.b_note" class="form-control" id="note" cols="30" rows="5" placeholder="Note"></textarea>
                                     </div>
-                                    <button type="button" class="btn btn-primary">Send</button>
+                                    <button type="submit" class="btn btn-primary">Send</button>
                                 </form>
                             </div>
                         </div>
@@ -396,14 +394,22 @@
     <script>
         export default{
             data(){
+                 var name = JSON.parse(localStorage.getItem('key'));
                 return {
-                    //description: 'Address',
+                   // description: '',
                     isCheckLogin: true,
                     isCheckRegister: false,
-                    latLng: {}
+                    latLng: {},
+                    description:'',
+                    infoRequest:{},
+                    lgName:name
                 }
             },
             methods: {
+                logout(){
+                    localStorage.removeItem('key');
+                    window.location.replace('http://localhost:8080/#/');
+                },
                 changeIsCheckLogin: function(){
                     this.isCheckLogin = !this.isCheckLogin;
                     this.isCheckRegister = !this.isCheckRegister;
@@ -412,9 +418,27 @@
                     this.isCheckLogin = !this.isCheckLogin;
                     this.isCheckRegister = !this.isCheckRegister;
                 },
+                 sendRequest(){
+                    if(this.infoRequest.b_name==null || this.infoRequest.b_phone==null || this.infoRequest.b_address==null || this.infoRequest.b_note == null){
+                        alert('dữ liệu không được rỗng!!');
+                        return;
+                    }
+                    this.axios.post("http://location:1742/b/bookcar",this.infoRequest)
+                    .then((response) => {
+                        alert(response.data.message);
+                        this.infoRequest.b_name =null;
+                        this.infoRequest.b_phone =null;
+                        this.infoRequest.b_address=null;
+                        this.infoRequest.b_note =null;
+                        console.log(response);
+                     }).catch(err => {
+                        console.log(err)
+                    })
+                },
                 setPlace(place) {
+                    //console.log(place.formatted_address);
+                    this.infoRequest.b_address = place.formatted_address;
                     if (!place) return
-
                     this.latLng = {
                       lat: place.geometry.location.lat(),
                       lng: place.geometry.location.lng(),

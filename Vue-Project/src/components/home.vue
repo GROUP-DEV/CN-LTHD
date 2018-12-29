@@ -257,13 +257,14 @@
                 display: none;
             }
         }
-        #sidebar ul li:focus {
+        
+        .addclass {
+            display: block;
             color: #7386D5;
             background: #fff;
         }
-         #sidebar ul li:active {
-            color: #7386D5;
-            background: #fff;
+        .removeclass {
+            display: none;
         }
 </style>
 <template>
@@ -282,18 +283,17 @@
                     </strong>
                 </div>
                 <ul class="list-unstyled components">
-                    <li class="active">
+                    <li @click="acti('request')" v-bind:class="clRequest">
                         <!-- <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" > -->
-                           
-                        <router-link data-toggle="collapse" aria-expanded="false"   to="/request">
+                        <router-link data-toggle="collapse" to="/request"> <!-- aria-expanded="false" -->
                              <i class="fas fa-home"></i>
                             Request
                         </router-link>
                         <!-- </a> -->
                     </li>
-                    <li>
+                    <li @click="acti('location')" v-bind:class="clLocation">
                         <!-- <a href="#"> -->
-                            <router-link  to="/location">
+                            <router-link  to="/location" >
                                 <i class="fas fa-map-marker-alt"></i>
                                 Location
                             </router-link>
@@ -303,7 +303,7 @@
                             Management
                         </a> -->
                     </li>
-                    <li>
+                    <li @click="acti('management')" v-bind:class="clManagement">
                         <router-link  to="/management">
                                 <i class="fas fa-copy"></i>
                                 Management
@@ -323,11 +323,33 @@
 <script>
         export default{
             data(){
+                var name = JSON.parse(localStorage.getItem('key'));
                 return {
                     
                     isCheckLogin: true,
                     isCheckRegister: false,
                     active:'active',
+                    clRequest:'',
+                    clLocation:'',
+                    clManagement:'',
+                    lcStore:name
+                }
+            },
+            mounted(){
+                 if(this.lcStore.user.group_user == 1 ){
+                    this.clRequest = 'addclass';
+                    this.clLocation='removeclass',
+                    this.clManagement='removeclass'
+                }
+                if(this.lcStore.user.group_user == 2){
+                    this.clRequest = 'removeclass';
+                    this.clLocation='addclass',
+                    this.clManagement='removeclass'
+                }
+                if(this.lcStore.user.group_user == 3){
+                    this.clRequest = 'removeclass';
+                    this.clLocation='removeclass',
+                    this.clManagement='addclass'
                 }
             },
             methods: {
@@ -338,6 +360,23 @@
                 showmenu: function(){
                      this.active ='';
                 },
+                acti:function(varr){
+                    if(varr == 'request'){
+                        this.clRequest = 'addclass';
+                        this.clLocation='',
+                        this.clManagement=''
+                    }
+                    if(varr == 'location'){
+                        this.clRequest = '';
+                        this.clLocation='addclass',
+                        this.clManagement=''
+                    }
+                    if(varr == 'management'){
+                        this.clRequest = '';
+                        this.clLocation='',
+                        this.clManagement='addclass'
+                    }
+                }
             }
         }
 </script>
