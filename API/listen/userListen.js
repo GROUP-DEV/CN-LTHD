@@ -91,5 +91,15 @@ router.post('/changeStatus', (req, res) => {
 	});
 })
 
+router.post('/findLimitCarCanBook' ,(req, res) => {
+	user.findLimitCarCanBook()
+	.then(rows => {
+		res.status(200).send(JSON.stringify(rows));
+	})
+	.catch(err => {
+		console.log(err);
+		res.status(400).send(JSON.stringify(err));
+	});
+})
 
 module.exports = router;

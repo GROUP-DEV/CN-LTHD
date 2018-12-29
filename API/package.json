@@ -28,6 +28,7 @@
     "couchbase": "^2.6.1",
     "debug": "^4.1.0",
     "dotenv": "^6.1.0",
+    "google-distance": "^1.0.1",
     "google-distance-matrix": "^1.1.1",
     "node-geocoder": "^3.22.0",
     "socket.io": "^2.2.0",

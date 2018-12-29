@@ -26,3 +26,8 @@ exports.changeStatus=function(u_id,u_status){
 	var sql =`UPDATE user set status = '${ u_status }' WHERE id = '${ u_id }'`;
 	return db.write(sql);
 }
+
+exports.findLimitCarCanBook=function(){
+	var sql =`SELECT id,username,phone FROM user where role = 4 and status = 0;`;
+	return db.load(sql);
+}
