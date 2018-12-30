@@ -222,6 +222,13 @@ a.nav-link.cl-regist:focus .d-login {
                              console.log(this.msg);
                              return;
                         }
+                        if(response.data.user.group_user == 4){
+                            //$router.push({ path: '/render/' });
+                            localStorage.setItem('key',JSON.stringify(response.data));
+                             this.$router.push({path: 'driver'});
+                             console.log(this.msg);
+                             return;
+                        }
                         else{
                             alert('Ten dang nhap va mat khau khong ton tai!!');
                         }
@@ -253,6 +260,7 @@ a.nav-link.cl-regist:focus .d-login {
                         console.log(err)
                     })
                 },
+                
                 // GET LAT AND LNG
                 geocodeAPI(){
                     // Prevent actual submit
@@ -268,14 +276,11 @@ a.nav-link.cl-regist:focus .d-login {
                     })
                     .then(function(response){
                       // Log full response
-                
                       var ln = response.data.results[0].geometry.location.lng;
                       //this.lng = ln;
                        // this.location.lat = response.data.results[0].geometry.location.lat;
                         //this.lng = response.data.results[0].geometry.location.lng;
                       console.log(response.data.results[0].geometry.location.lng);
-
-                    
                     })
                     .catch(function(error){
                       console.log(error);

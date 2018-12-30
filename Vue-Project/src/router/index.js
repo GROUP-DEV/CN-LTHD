@@ -11,6 +11,7 @@ import login from '../components/login.vue';
 import renders from '../components/render.vue';
 import location from '../components/location.vue';
 import management from '../components/managementRequest.vue';
+import driver from '../components/taixe.vue';
 Vue.use(Router)
 
 export default new Router({
@@ -28,15 +29,16 @@ export default new Router({
             {path:'/management',name:'management',component:management}
         ]
     },
+    {
+        name: 'driver',
+        path: '/driver',
+        component: driver
+    },
    // {
    //      name: 'render',
    //      path: '/uc-request',
    //      component: render
    //  },
-   
- 
-  
- 
     // {
     //     name: 'listMail',
     //     path: '/list-mail',
