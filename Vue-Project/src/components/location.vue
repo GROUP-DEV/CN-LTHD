@@ -302,10 +302,29 @@
             }
         }
 
-
+        #loader{
+            position: fixed;
+            z-index: 1;
+            margin-top: 17%;
+            margin-left: 42%;
+            border-radius: 104px;
+        }
+        .classShowloader{
+            display: block;
+        }
+        .classHiddenloader{
+            display: none;
+        }
+        #loader img{
+          border-radius: 50px;
+          box-shadow: 2px 7px 200px 13px;
+        }
   </style>
   <template>
    <div id="content">
+    <div id="loader" v-bind:class="clLoader">
+      <img src="https://uphinhnhanh.com/images/2018/12/19/ajax-loader.gif" alt="loader">
+    </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand " href="#" > <img width="70px" src="https://uphinhnhanh.com/images/2018/12/02/logod94b759c8218f26f.png" alt=""> </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -400,14 +419,14 @@
                   <i class="fa fa-times" aria-hidden="true"></i>
                 </div>
                 <ul>
-                  <li>Name &nbsp;&nbsp;  : <span>Nguyễn Văn A </span> </li>
-                  <li>Address : <span>1994</span></li>
-                  <li>Phone  &nbsp;&nbsp;  : <span>Gay</span></li>
-                  <li>Note  &nbsp;&nbsp;&nbsp;&nbsp;   : <span>1234567890</span></li>
+                  <li>Name &nbsp;&nbsp;  : <span>{{fromDetail.customer_name}} </span> </li>
+                  <li>Address : <span>{{fromDetail.address}}</span></li>
+                  <li>Phone  &nbsp;&nbsp;  : <span>{{fromDetail.customer_phone}}</span></li>
+                  <li>Note  &nbsp;&nbsp;&nbsp;&nbsp;   : <span>{{fromDetail.note}}</span></li>
                   <li>Lat &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  : <span>{{center.lat}}</span></li>
                   <li>lng &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;  : <span>{{center.lng}}</span></li>
                   <li><hr/></li>
-                  <li><button class="btn btn-primary" type="button" id="btntimxe">Tìm Xe</button></li>
+                  <li><button class="btn btn-primary" type="button" id="btntimxe" @click="searchCar">Tìm Xe</button></li>
                 </ul>
               </div>
             </div>
@@ -457,10 +476,11 @@
                 isclose: '',
                 formdata:[],
                 fromDetail:{},
-                center: {lat: 10.7680949, lng: 106.6739531 },//lat: 10.7680949, lng: 106.6739531 },
+                center: {lat: 10.7680949, lng: 106.6739531},//lat: 10.7680949, lng: 106.6739531 },
                 markers: [{position:{lat: 10.7680949, lng: 106.6739531}}],
                 places: [],
-                searchAddressInput: ''// save place current
+                searchAddressInput: '',// save place current
+                clLoader:'classHiddenloader'
             }
         },
         mounted () {
@@ -477,31 +497,52 @@
                     this.isshowdetail = 'show-detail ';
                    // this.isclose = '';
                 },
+                searchCar(){
+                    this.clLoader = 'classShowloader';
+                   this.axios.defaults.headers.common['x-access-token'] =this.lgName.access_token;
+                   this.axios.get('http://localhost:1742/b/')   
+                    .then(response =>{
+                      this.clLoader = 'classHiddenloader    ';
+                      console.log(response.data);
+                    })
+                },
                 closeDtail: function(){
                     this.isshowdetail = 'hide-detail';
 
                 },
+                // show Detail
                 selectDetail(phone){
                    this.isshowdetail = 'show-detail ';
                    alert(phone);
                    this.axios.defaults.headers.common['x-access-token'] =this.lgName.access_token;
                    this.axios.post("http://localhost:1742/b/getRequestFromPhone",{'phone_customer':phone})
                     .then((response) => {  
-                        
-                         this.fromDetail = response.data; 
-                         console.log(fromDetail);
+                        this.fromDetail = response.data[0]; 
+                       console.log(this.fromDetail);
+                        this.center.lat =this.fromDetail.re_geo_lat;
+                        this.center.lng = this.fromDetail.re_geo_lon;
+                        this.markers[0].position.lat = this.fromDetail.re_geo_lat;
+                        this.markers[0].position.lng = this.fromDetail.re_geo_lon;
                      }).catch(err => {
                         console.log(err)
                     })
                 },
+                // load list request
                 loadRequest(){
                    this.axios.defaults.headers.common['x-access-token'] =this.lgName.access_token;
                    this.axios.get('http://localhost:1742/b/')   
                     .then(response =>{
+                      console.log(response.data);
                         this.formdata = response.data; 
+                        setTimeout(()=>{
+                           this.loadRequest()
+                        },500);
                     })
                     .catch(function(error){
-                        console.log(error);
+                        alert('The token expires.. please login!!');
+                        localStorage.removeItem('key');
+                        window.location.replace('http://localhost:8080/#/');
+                        //this.logout();
                     })
                 },
                 formatDate:function(date) {

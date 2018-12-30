@@ -16,7 +16,6 @@
     .request-receiver{
         width: 100%;
         height: 100%;
-      
     }
    /* .request-receiver .shadow-bg{
         width: 100%;
@@ -423,7 +422,8 @@
                         alert('dữ liệu không được rỗng!!');
                         return;
                     }
-                    this.axios.post("http://location:1742/b/bookcar",this.infoRequest)
+                    this.axios.defaults.headers.common['x-access-token'] =this.lgName.access_token;
+                    this.axios.post("http://localhost:1742/b/bookcar",this.infoRequest)
                     .then((response) => {
                         alert(response.data.message);
                         this.infoRequest.b_name =null;

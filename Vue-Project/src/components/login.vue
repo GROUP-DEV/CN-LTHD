@@ -153,8 +153,11 @@ a.nav-link.cl-regist:focus .d-login {
 </template>
 <script> 
   export default{
+
         data(){
+           var name = JSON.parse(localStorage.getItem('key'));
             return {
+                checkLogin:name,
                 isCheckLogin: true,
                 isCheckRegister: false,
                 formdata:{u:'request@gmail.com',p:'123456'},//u:'htkh17hcb@gmail.com',p:'0908325568'
@@ -169,6 +172,15 @@ a.nav-link.cl-regist:focus .d-login {
         mounted () {
             //this.geolocate();
             //this.addMarker();
+             if(this.checkLogin.user.group_user == 1){
+                window.location.replace('http://localhost:8080/#/request');
+            }
+            if(this.checkLogin.user.group_user == 2){
+                window.location.replace('http://localhost:8080/#/location');
+            }
+            if(this.checkLogin.user.group_user == 3){
+                window.location.replace('http://localhost:8080/#/management');
+            }
         },
         
         methods: {
