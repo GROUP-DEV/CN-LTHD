@@ -1,5 +1,3 @@
-
-</style>
 <template>
   <div id="app">
     <!-- <div class="wrapper"> -->
