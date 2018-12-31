@@ -461,6 +461,8 @@
 </template>
 
 <script>
+    var socket = io.connect();
+    
   export default{
 
         data(){

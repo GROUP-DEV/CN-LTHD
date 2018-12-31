@@ -27,7 +27,12 @@ exports.changeStatus=function(u_id,u_status){
 	return db.write(sql);
 }
 
-exports.findLimitCarCanBook=function(){
+exports.updateToken=function(u_id,u_token){
+	var sql =`UPDATE user set token = '${ u_token }' WHERE id = '${ u_id }'`;
+	return db.write(sql);
+}
+
+exports.findLimitCarCanBook=function(u_lat,u_log){
 	var sql =`SELECT id,username,phone FROM user where role = 4 and status = 0;`;
 	return db.load(sql);
 }

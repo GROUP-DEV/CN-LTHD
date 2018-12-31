@@ -19,13 +19,23 @@ waiting_response (boolean)
 
 //event sử lý client
 wss.on('connection', socket => {
+    socket.emit('news', { hello: 'world' });
+
     //callback socket
     socket.on('disconnection', () => {
         user_process.changeStatus(socket.m_info.key, '0');
 
         listDrive.splice(listDrive.indexOf(socket));
     });
-
+    socket.on('updateToken',info=>{
+        user_process.updateToken(info.id,info.token).then(rows=>{
+            if(rows.length==0){
+                socket.emit('update_token_failed',{status:'failed'});
+            }else if(rows.length==1){
+                socket.emit('update_token_succes',{status:'success'})
+            }
+        })
+    });
     // info = [phone or email, pass]
     socket.on('login', info => {
         user_process.logIn1(info.user, info.pass)

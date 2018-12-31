@@ -5,7 +5,7 @@ import Router from 'vue-router'
 //import HelloWorld from '@/components/HelloWorld'
 //import home from '../components/home.vue';
 // import listMail from '../components/listMail.vue';
-
+import VueSocketIO from 'vue-socket.io'
 import request from '../components/request.vue';
 import login from '../components/login.vue';
 import renders from '../components/render.vue';

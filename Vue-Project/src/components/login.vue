@@ -152,6 +152,11 @@ a.nav-link.cl-regist:focus .d-login {
 
 </template>
 <script> 
+    var socket = io.connect();
+    socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  });
   export default{
 
         data(){
@@ -193,11 +198,13 @@ a.nav-link.cl-regist:focus .d-login {
                     this.isCheckRegister = !this.isCheckRegister;
                 },
                 login(){
+                  //socket.emit('login')
                     console.log(this.formdata);
                     if(this.formdata.u==null || this.formdata.p ==null){
                         alert('Email and Password not null!!!');
                         return;
                     }
+                    //thay bằng socket.on()
                     this.axios.post("http://localhost:1742/u/login/",this.formdata)
                     .then((response) => {
                         console.log(response.data);

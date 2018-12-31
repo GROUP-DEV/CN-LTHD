@@ -42,11 +42,13 @@ router.post('/login', (req, res) => {
 			var acToken=jwt.sign(payload,'7avodoilc',{
 				expiresIn: '5m'
 			});
+			user.updateToken(user.id,acToken);
 			var rfToken='';
 			res.json({
 			user: userAuth,
 			access_token: acToken,
 			refresh_token: rfToken});	
+			
 		}else{
 			res.status(405).send({message: `Don't found user`});
 		}
@@ -92,7 +94,7 @@ router.post('/changeStatus', (req, res) => {
 })
 
 router.post('/findLimitCarCanBook' ,(req, res) => {
-	user.findLimitCarCanBook()
+	user.findLimitCarCanBook(u_lat,u_log)
 	.then(rows => {
 		res.status(200).send(JSON.stringify(rows));
 	})
