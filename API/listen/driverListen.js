@@ -17,7 +17,9 @@ latitude, longitude,
 waiting_response (boolean)
 */
 
+//event sử lý client
 wss.on('connection', socket => {
+    //callback socket
     socket.on('disconnection', () => {
         user_process.changeStatus(socket.m_info.key, '0');
 
@@ -41,6 +43,7 @@ wss.on('connection', socket => {
                 socket.m_info.phone = rows[0].phone;
                 socket.m_info.num_seat = rows[0].num_seat;
                 socket.m_info.waiting_response = false;
+                socket.user=row[0];
                 listDrive.push(socket);
                 socket.emit('login_response', JSON.stringify(row[0]));
             }
@@ -121,6 +124,27 @@ wss.on('connection', socket => {
             console.log(err);
         })
     });
+
+    var rad = function(x) {
+        return x * Math.PI / 180;
+      };
+      
+      var getDistance = function(p1, p2) {
+        var R = 6378137; //Haversine Earth’s mean radius in meter
+        var p1lat=parseFloat(p1.lat);
+        var p1lng=parseFloat(p1.lng);
+        var p2lat=parseFloat(p2.lat);
+        var p2lng=parseFloat(p2.lng);
+      
+        var dLat = rad(p2lat - p1lat);
+        var dLong = rad(p2lng - p1lng);
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(rad(p1lat)) * Math.cos(rad(p2lat)) *
+          Math.sin(dLong / 2) * Math.sin(dLong / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c;
+        return d; // returns the distance in meter
+      };
 });
 
 var port = process.env.port || 2471;
