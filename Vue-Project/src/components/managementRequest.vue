@@ -503,25 +503,7 @@
                         this.markers[0].position.lng = results[0].geometry.location.lng();
                       //}
                     });
-                   //this.setPlace(Id);
-                  //   this.axios.get(VueGoogleMaps, {
-                  //     load: {
-                  //     key: 'AIzaSyCHY7K0nxdBJ2MVMMVe46mJP8PvoezIUvc',
-                  //     libraries: Id, // This is required if you use the Autocomplete plugin
-                  //     },
-                  //  })
-                  // .then((response)=>{
-                  // // Log full response
-            
-                  // var ln = response.data.results[0].geometry.location.lng;
-                  // //this.lng = ln;
-                  //  // this.location.lat = response.data.results[0].geometry.location.lat;
-                  //   //this.lng = response.data.results[0].geometry.location.lng;
-                  // console.log(response.data);
-                  // })
-                  // .catch(function(error){
-                  //   console.log(error);
-                  // });
+              
 
                 },
                 setPlaceText(place) {

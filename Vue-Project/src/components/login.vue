@@ -153,8 +153,11 @@ a.nav-link.cl-regist:focus .d-login {
 </template>
 <script> 
   export default{
+
         data(){
+           var name = JSON.parse(localStorage.getItem('key'));
             return {
+                checkLogin:name,
                 isCheckLogin: true,
                 isCheckRegister: false,
                 formdata:{u:'request@gmail.com',p:'123456'},//u:'htkh17hcb@gmail.com',p:'0908325568'
@@ -169,6 +172,15 @@ a.nav-link.cl-regist:focus .d-login {
         mounted () {
             //this.geolocate();
             //this.addMarker();
+             if(this.checkLogin.user.group_user == 1){
+                window.location.replace('http://localhost:8080/#/request');
+            }
+            if(this.checkLogin.user.group_user == 2){
+                window.location.replace('http://localhost:8080/#/location');
+            }
+            if(this.checkLogin.user.group_user == 3){
+                window.location.replace('http://localhost:8080/#/management');
+            }
         },
         
         methods: {
@@ -210,6 +222,13 @@ a.nav-link.cl-regist:focus .d-login {
                              console.log(this.msg);
                              return;
                         }
+                        if(response.data.user.group_user == 4){
+                            //$router.push({ path: '/render/' });
+                            localStorage.setItem('key',JSON.stringify(response.data));
+                             this.$router.push({path: 'driver'});
+                             console.log(this.msg);
+                             return;
+                        }
                         else{
                             alert('Ten dang nhap va mat khau khong ton tai!!');
                         }
@@ -241,6 +260,7 @@ a.nav-link.cl-regist:focus .d-login {
                         console.log(err)
                     })
                 },
+                
                 // GET LAT AND LNG
                 geocodeAPI(){
                     // Prevent actual submit
@@ -256,14 +276,11 @@ a.nav-link.cl-regist:focus .d-login {
                     })
                     .then(function(response){
                       // Log full response
-                
                       var ln = response.data.results[0].geometry.location.lng;
                       //this.lng = ln;
                        // this.location.lat = response.data.results[0].geometry.location.lat;
                         //this.lng = response.data.results[0].geometry.location.lng;
                       console.log(response.data.results[0].geometry.location.lng);
-
-                    
                     })
                     .catch(function(error){
                       console.log(error);
