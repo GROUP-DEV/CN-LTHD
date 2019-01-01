@@ -443,10 +443,6 @@
                       lat: place.geometry.location.lat(),
                       lng: place.geometry.location.lng(),
                     };
-                },
-                thoat(){
-                    localStorage.removeItem('key');
-                    window.location.replace('http://localhost:8080/#/');
                 }
             }
         }
