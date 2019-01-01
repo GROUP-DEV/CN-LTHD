@@ -152,11 +152,8 @@ a.nav-link.cl-regist:focus .d-login {
 
 </template>
 <script> 
-    var socket = io.connect();
-    socket.on('news', function (data) {
-    console.log(data);
-    socket.emit('my other event', { my: 'data' });
-  });
+  var socket = io.connect();
+  
   export default{
 
         data(){

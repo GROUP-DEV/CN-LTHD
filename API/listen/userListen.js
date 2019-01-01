@@ -58,7 +58,7 @@ router.post('/login', (req, res) => {
 		res.status(500).send(err);
 	});
 })
-
+rout.post('')
 /*
 "u_phone":"0947123456"
 "u_mail":"coldboy@gmail.com",
