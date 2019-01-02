@@ -6,7 +6,7 @@ exports.loadAll = function() {
 }
 
 exports.logIn = function(user, pass) {
-	var sql = `SELECT id 'key', username 'fullname', phone 'numberphone', seat 'num_seat', email 'mail', role 'group_user' FROM user WHERE (MD5(email) LIKE MD5('${user}')) AND password like MD5('${pass}')`;
+	var sql = `SELECT id 'key', username 'fullname', phone 'numberphone', seat 'num_seat', email 'mail', role 'group_user',token FROM user WHERE (MD5(email) LIKE MD5('${user}')) AND password like MD5('${pass}')`;
 	return db.load(sql);
 }
 
@@ -28,6 +28,9 @@ exports.changeStatus=function(u_id,u_status){
 }
 
 exports.updateToken=function(u_id,u_token){
+	console.log(u_id);
+	console.log(u_token);
+
 	var sql =`UPDATE user set token = '${ u_token }' WHERE id = '${ u_id }'`;
 	return db.write(sql);
 }

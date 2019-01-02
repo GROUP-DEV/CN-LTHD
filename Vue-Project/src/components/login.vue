@@ -204,7 +204,7 @@ a.nav-link.cl-regist:focus .d-login {
                     //thay bằng socket.on()
                     this.axios.post("http://localhost:1742/u/login/",this.formdata)
                     .then((response) => {
-                        console.log(response.data);
+                        console.log(response.data.user);
                         if(response.data.user.group_user == 1){
                             //$router.push({ path: '/render/' });
                             localStorage.setItem('key',JSON.stringify(response.data));

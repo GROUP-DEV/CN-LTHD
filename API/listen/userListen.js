@@ -32,6 +32,8 @@ var verifyAccess=(req,res,next)=>{
 "p":"123456"
 */
 router.post('/login', (req, res) => {
+	console.log(req.body.u);
+	console.log(req.body.p);
 	user.logIn(req.body.u, req.body.p)
 	.then(rows => {
 		if(rows.length == 1){
@@ -42,7 +44,9 @@ router.post('/login', (req, res) => {
 			var acToken=jwt.sign(payload,'7avodoilc',{
 				expiresIn: '5m'
 			});
-			user.updateToken(user.id,acToken);
+			user.updateToken(rows[0].key,acToken);
+			console.log(acToken);
+
 			var rfToken='';
 			res.json({
 			user: userAuth,
@@ -58,7 +62,7 @@ router.post('/login', (req, res) => {
 		res.status(500).send(err);
 	});
 })
-rout.post('')
+router.post('')
 /*
 "u_phone":"0947123456"
 "u_mail":"coldboy@gmail.com",

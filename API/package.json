@@ -26,7 +26,7 @@
     "axios": "^0.18.0",
     "bluebird": "^3.5.3",
     "couchbase": "^2.6.1",
-    "debug": "^4.1.0",
+    "debug": "^4.1.1",
     "dotenv": "^6.1.0",
     "google-distance": "^1.0.1",
     "google-distance-matrix": "^1.1.1",
