@@ -27,6 +27,7 @@ wss.on('connection', socket => {
 
         listDrive.splice(listDrive.indexOf(socket));
     });
+
     socket.on('updateToken',info=>{
         user_process.updateToken(info.id,info.token).then(rows=>{
             if(rows.length==0){
@@ -36,6 +37,8 @@ wss.on('connection', socket => {
             }
         })
     });
+
+    // khi lai xe dang nhap
     // info = [phone or email, pass]
     socket.on('login', info => {
         user_process.logIn1(info.user, info.pass)
@@ -68,93 +71,46 @@ wss.on('connection', socket => {
         });
     });
 
-    setInterval(() => {
-        wss.sockets.emit('request_update_location');
-    }, 2500);
-
+    // cap nhat vi tri cua lai xe
     // info = [latitude, longitude]
-    socket.on('update_location', info => {
-        drive_process.updateLocationCurrent(socket.m_info.key, info.latitude, info.longitude);
-
+    socket.on('location_driver', info => {
         socket.m_info.latitude = info.latitude;
         socket.m_info.longitude = info.longitude;
+
+        drive_process.updateLocationCurrent(socket.m_info.key, info.latitude, info.longitude);
+    });
+    
+    // lai xe chap nhan yeu cau
+    // info = [phone (of request), time_book (car)]
+    socket.on('accept_request', info => {
+        book_process.setDriver(info.phone, info.time_book, socket.m_info.key);
+        book_process.changeStatus(info.phone, info.time_book, 'đã có xe nhận');
     });
 
-    processSendRequestTo3Driver = function(info_request) {
-        var location_request = `${ info_request.geocoding_lat },${ info_request.geocoding_lon }`;
-        
-        for (var i = 0; i < 3; i++) {
-            var len = listDrive.length;
-            let max = -1;
-            for (var j = 0; j < len; j++) {
-                var location_drive = `${ listDrive[j].m_info.latitude },${ listDrive[j].m_info.longitude }`, 
-                location_drive_max = (max == -1 ? '' : `${ listDrive[max].m_info.latitude },${ listDrive[max].m_info.longitude }`);
+    // khi khong muon nhan yeu cau thi se nhan ham nay
+    // info = [phone (of request), time_book (car)]
+    socket.on('reject_request', info => {
+        book_process.changeStatus(info.phone, info.time_book, 'đã định vị xong');
+    });
 
-                if(drive_process.distance(location_drive, local_request) > (max == -1 ? 0 : drive_process.distance(location_drive_max, local_request)) 
-                    && listDrive[j].m_info.waiting_response == false)
-                    max = j;
-            }
-            if(max != -1) {
-                listDrive[max].emit('send_request', info_request);
-                listDrive[max].m_info.waiting_response = true;
-            }
-        }
-    }
-
-    // receive request book car and process send request to driver
-    setInterval(() => {
+    // gui yeu cau tim nguoi de cho 
+    socket.on('search_request', () => {
         drive_process.getListBookedCarInStatuLocated()
         .then(rows => {
-            for (var i = 0; i < rows.length; i++) {
-                processSendRequestTo3Driver(rows[i]);
+            let index_request_has_distance_min = 0;
+            for (var i = 1; i < rows.length; i++) {
+                if(drive_process.distance(`${rows[i].geocoding_lat},${rows[i].geocoding_lon}`, `${socket.latitude},${socket.longitude}`) 
+                    > drive_process.distance(`${rows[index_request_has_distance_min].geocoding_lat},${rows[index_request_has_distance_min].geocoding_lon}`, `${socket.latitude},${socket.longitude}`))
+                    index_request_has_distance_min = i;
             }
+            socket.emit('sent_request', rows[number_request_sent]);
+            book_process.changeStatus(rows[number_request_sent].customer_phone, rows[number_request_sent]time_request, 'đang nhận phản hồi');
         })
         .catch(err => {
             console.log(`Error when get list book car statu-ing locatived.`);
             console.log(err);
-        })
-    }, 5000);
-
-    // info = [phone (of request), time_book (car)]
-    socket.on('response_request', info => {
-        drive_process.getBookCar(info.phone, info.time_book)
-        .then(rows => {
-            if(rows.length == 1 && rows[0].status == `đã định vị xong`) {
-                socket.emit('accept_responce');
-                book_process.setDriver(info.phone, info.time_book, socket.m_info.key);
-                book_process.changeStatus(info.phone, info.time_book, 'đã có xe nhận');
-            }
-            else {
-                socket.m_info.waiting_response = false;
-                socket.emit('miss_response');
-            }
-        })
-        .catch(err => {
-            console.log('Error when getBookCar in driveProcess');
-            console.log(err);
-        })
+        });
     });
-
-    var rad = function(x) {
-        return x * Math.PI / 180;
-      };
-      
-      var getDistance = function(p1, p2) {
-        var R = 6378137; //Haversine Earth’s mean radius in meter
-        var p1lat=parseFloat(p1.lat);
-        var p1lng=parseFloat(p1.lng);
-        var p2lat=parseFloat(p2.lat);
-        var p2lng=parseFloat(p2.lng);
-      
-        var dLat = rad(p2lat - p1lat);
-        var dLong = rad(p2lng - p1lng);
-        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos(rad(p1lat)) * Math.cos(rad(p2lat)) *
-          Math.sin(dLong / 2) * Math.sin(dLong / 2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c;
-        return d; // returns the distance in meter
-      };
 });
 
 var port = process.env.port || 2471;

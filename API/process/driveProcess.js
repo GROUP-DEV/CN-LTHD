@@ -37,3 +37,11 @@ WHERE customer.phone LIKE '${phone}'
 AND BookCar.time = '${ time_book }';`;
 	return db.load(sql);
 }
+
+exports.upNumberSentRequestToDriver = function(phone, time_book) {
+	let sql = `UPDATE BookCar 
+SET number_request_sent = number_request_sent + 1 
+WHERE time = '${time_book}' 
+	AND customer IN (SELECT id FROM customer WHERE phone like '${phone}';`;
+	return db.write(sql);
+}
