@@ -104,7 +104,7 @@ wss.on('connection', socket => {
                     index_request_has_distance_min = i;
             }
             socket.emit('sent_request', rows[number_request_sent]);
-            book_process.changeStatus(rows[number_request_sent].customer_phone, rows[number_request_sent]time_request, 'đang nhận phản hồi');
+            book_process.changeStatus(rows[number_request_sent].customer_phone, rows[number_request_sent].time_request, 'đang nhận phản hồi');
         })
         .catch(err => {
             console.log(`Error when get list book car statu-ing locatived.`);
