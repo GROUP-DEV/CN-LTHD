@@ -5,18 +5,38 @@ var router = express.Router();
 
 var verifyAccess=(req,res,next)=>{
 	var token=req.headers['x-access-token'];
+	var refreshtoken=req.headers['x-refresh-token'];
+
 	if(token){
 		jwt.verify(token,'7avodoilc', (err,payload) => {
 			if(err){
-				res.statusCode=403;
-				res.JSON({
-					msg:'Invalid token',
-					error: err
-				});
-			}else{
-				req.token_payload=payload;
+                if(err.message==='jwt expired')
+                {
+					var refToken=user.findRefeshToken(refreshtoken).then(rows=>{
+						if(rows.length == 1 ){
+							createNewToken(ref_token,req,res,next);
+						}else{
+							res.statusCode=403;
+							res.json({
+							  returnCode:0,
+							  message:'INVALID TOKEN',
+							  error:err
+							});
+						}
+					});
+                }else{
+                  res.statusCode=403;
+                  res.json({
+                    returnCode:0,
+                    message:'INVALID TOKEN',
+                    error:err
+                  });
+                }
+            }else{
+                console.log(user);
+                req.token_payload=payload;
 				next();
-			}
+            }
 		})
 	}else{
 		res.statusCode=403;
@@ -26,14 +46,28 @@ var verifyAccess=(req,res,next)=>{
 	}
 }
 
+var createRefreshToken= function createRefreshToken(){
+	var str=randomstring.generate({
+	  length: 30,
+	  charset: '7avodoilc'
+  });
+	return str
+  }
+  
+
+var createNewToken=(req,res,next)=>{
+	var acToken=jwt.sign(payload,'7avodoilc',{
+		expiresIn: '5m'
+	});
+	
+}
+
 
 /*
 "u":"coldboy@gmail.com",
 "p":"123456"
 */
 router.post('/login', (req, res) => {
-	console.log(req.body.u);
-	console.log(req.body.p);
 	user.logIn(req.body.u, req.body.p)
 	.then(rows => {
 		if(rows.length == 1){
@@ -44,14 +78,18 @@ router.post('/login', (req, res) => {
 			var acToken=jwt.sign(payload,'7avodoilc',{
 				expiresIn: '5m'
 			});
-			user.updateToken(rows[0].key,acToken);
+			var token=rows[0].token;
+			if(rows[0].token===""){
+				token=createRefreshToken;
+				user.updateToken(rows[0].key,token);
+			}
 			console.log(acToken);
 
-			var rfToken='';
 			res.json({
 			user: userAuth,
 			access_token: acToken,
-			refresh_token: rfToken});	
+			refresh_token: token});
+			console.log(res);
 			
 		}else{
 			res.status(405).send({message: `Don't found user`});
@@ -83,7 +121,7 @@ router.post('/signin', (req, res) => {
 	});
 })
 
-router.post('/changeStatus', (req, res) => {
+router.post('/changeStatus',verifyAccess, (req, res) => {
 	console.log(req.body.u_id);
 	console.log(req.body.u_status);
 	user.changeStatus(req.body.u_id, req.body.u_status)
@@ -97,7 +135,7 @@ router.post('/changeStatus', (req, res) => {
 	});
 })
 
-router.post('/findLimitCarCanBook' ,(req, res) => {
+router.post('/findLimitCarCanBook',verifyAccess ,(req, res) => {
 	user.findLimitCarCanBook(u_lat,u_log)
 	.then(rows => {
 		res.status(200).send(JSON.stringify(rows));

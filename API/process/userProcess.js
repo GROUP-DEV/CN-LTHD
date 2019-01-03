@@ -28,10 +28,12 @@ exports.changeStatus=function(u_id,u_status){
 }
 
 exports.updateToken=function(u_id,u_token){
-	console.log(u_id);
-	console.log(u_token);
-
 	var sql =`UPDATE user set token = '${ u_token }' WHERE id = '${ u_id }'`;
+	return db.write(sql);
+}
+
+exports.findRefeshToken=function(u_token){
+	var sql =`SELECT * from user where token = '${ u_token }' `;
 	return db.write(sql);
 }
 

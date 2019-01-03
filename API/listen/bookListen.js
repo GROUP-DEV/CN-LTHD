@@ -8,18 +8,38 @@ var router = express.Router();
 
 var verifyAccess=(req,res,next)=>{
 	var token=req.headers['x-access-token'];
+	var refreshtoken=req.headers['x-refresh-token'];
+
 	if(token){
 		jwt.verify(token,'7avodoilc', (err,payload) => {
 			if(err){
-				res.statusCode=403;
-				res.JSON({
-					msg:'Invalid token',
-					error: err
-				});
-			}else{
-				req.token_payload=payload;
+                if(err.message==='jwt expired')
+                {
+					var refToken=user.findRefeshToken(refreshtoken).then(rows=>{
+						if(rows.length == 1 ){
+							createNewToken(ref_token,req,res,next);
+						}else{
+							res.statusCode=403;
+							res.json({
+							  returnCode:0,
+							  message:'INVALID TOKEN',
+							  error:err
+							});
+						}
+					});
+                }else{
+                  res.statusCode=403;
+                  res.json({
+                    returnCode:0,
+                    message:'INVALID TOKEN',
+                    error:err
+                  });
+                }
+            }else{
+                console.log(user);
+                req.token_payload=payload;
 				next();
-			}
+            }
 		})
 	}else{
 		res.statusCode=403;
@@ -27,6 +47,21 @@ var verifyAccess=(req,res,next)=>{
 			msg:'No token found'
 		});
 	}
+}
+var createRefreshToken= function createRefreshToken(){
+	var str=randomstring.generate({
+	  length: 30,
+	  charset: '7avodoilc'
+  });
+	return str
+  }
+  
+
+var createNewToken=(req,res,next)=>{
+	var acToken=jwt.sign(payload,'7avodoilc',{
+		expiresIn: '5m'
+	});
+	
 }
 
 router.post('/bookcar',verifyAccess ,(req, res) => {
