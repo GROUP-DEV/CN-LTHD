@@ -104,9 +104,9 @@ AND time like ${time_sent_request};`;
 	return db.write(sql);
 }
 
-exports.setDriver = function(phone_of_customer, time_sent_request, driver_id) {
+exports.setDriver = function(phone_of_customer, time_sent_request, driver_id, time_accept = this.getDateCurrent()) {
 	var sql = `UPDATE BookCar
-SET biker = '${driver_id}'
+SET biker = '${driver_id}', time_driver_accept = ${time_accept} 
 WHERE customer IN (SELECT id FROM customer WHERE phone LIKE '${phone_of_customer}')
 AND time like ${time_sent_request};`;
 	return db.write(sql);

@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const http = require('http');
+const http = require('http'),
 drive_process = require('./process/driveProcess'),
 user_process = require('./process/userProcess'),
 book_process = require('./process/bookProcess');
@@ -142,7 +142,7 @@ wss.on('connection', socket => {
 
     // cap nhat vi tri cua lai xe
     // info = [latitude, longitude]
-    socket.on('location_driver', info => {
+    socket.on('update_location_driver', info => {
         socket.m_info.latitude = info.latitude;
         socket.m_info.longitude = info.longitude;
 
@@ -181,4 +181,3 @@ wss.on('connection', socket => {
         });
     });
 });
-
