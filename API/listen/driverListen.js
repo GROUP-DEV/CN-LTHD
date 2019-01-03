@@ -27,7 +27,9 @@ wss.on('connection', socket => {
 
         listDrive.splice(listDrive.indexOf(socket));
     });
-
+    socket.on('SEND_MESSAGE', (data) => {
+        console.log(data.hello);
+    });
     socket.on('updateToken',info=>{
         user_process.updateToken(info.id,info.token).then(rows=>{
             if(rows.length==0){

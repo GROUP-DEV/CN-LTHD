@@ -461,7 +461,7 @@
 </template>
 
 <script>
-    var socket = io.connect();
+import io from 'socket.io-client';
     
   export default{
 
@@ -472,7 +472,8 @@
                 places: [],
                 currentPlace: null,
                 active:'active',
-                ishowTB:''
+                ishowTB:'',
+                socket : io('localhost:1742')
             }
         },
         mounted () {
@@ -491,6 +492,9 @@
             },
             hiddenTB:function(){
                 this.ishowTB='';
+                this.socket.emit('SEND_MESSAGE', {
+                hello: 'world'
+            });
             }
         }
     }
