@@ -458,6 +458,7 @@
   </template>
   <script>
    // import * as VueGoogleMaps from 'vue2-google-maps'
+import io from 'socket.io-client';
 
  $(document).ready(function () {
         // ẩn hiện table notification
@@ -480,7 +481,9 @@
                 markers: [{position:{lat: 10.7680949, lng: 106.6739531}}],
                 places: [],
                 searchAddressInput: '',// save place current
-                clLoader:'classHiddenloader'
+                clLoader:'classHiddenloader',
+                socket : io('localhost:1742')
+
             }
         },
         mounted () {
@@ -501,7 +504,12 @@
                     this.clLoader = 'classShowloader';
                    this.axios.defaults.headers.common['x-access-token'] =this.lgName.access_token;
                     this.axios.defaults.headers.common['x-refresh-token'] =this.lgName.refresh_token;
-
+                    this.socket.emit('search_request', {
+                                
+                        });
+                        this.socket.on('sent_request', (data) => {
+                        // you can also do this.messages.push(data)
+                    });
                    this.axios.get('http://localhost:1742/b/')   
                     .then(response =>{
                       this.clLoader = 'classHiddenloader    ';
