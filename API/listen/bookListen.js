@@ -125,6 +125,17 @@ router.get('/',verifyAccess ,(req, res) => {
 		console.log(err);
 		res.status(400).send(JSON.stringify(err));
 	});
-})
+});
+
+router.post('/loadRequestASC',(req,res)=>{
+	book.loadRequestASC()
+	.then(rows => {
+		res.status(200).send(JSON.stringify(rows));
+	})
+	.catch(err => {
+		console.log(err);
+		res.status(400).send(JSON.stringify(err));
+	});
+});
 
 module.exports = router;

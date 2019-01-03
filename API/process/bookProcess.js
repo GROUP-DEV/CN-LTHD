@@ -13,6 +13,11 @@ LEFT JOIN user ON BookCar.biker = user.id`;
 	return db.load(sql);
 }
 
+exports.loadRequestASC=function(){
+	var sql="SELECT * from BookCar order by time asc";
+	return db.load(sql);
+};
+
 function geocodingId(lati, longi) {
 	console.log("Location: "+lati + " " + longi);
 	db.load(`SELECT id FROM geocode WHERE latitude LIKE '${lati}' AND longitude LIKE '${longi}'`, (err, rows) => {
