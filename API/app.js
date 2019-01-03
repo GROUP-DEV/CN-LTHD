@@ -108,6 +108,7 @@ wss.on('connection', socket => {
     });
 
 
+    // khi co ket noi toi ma khon co thong tin thi gui yeu cau nhan lai thong tin
     if(typeof socket.m_info == 'undefined') {
         socket.emit('request_resent_profile');
     }

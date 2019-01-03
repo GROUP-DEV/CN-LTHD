@@ -75,6 +75,8 @@ $(document).ready(function() {
 		socket.emit('reject_request', sessionStorage.getItem('info_booked_car'));
 	});
 
+
+	// khi server gui yeu cau nhan lai thong tin
 	socket.on('request_resent_profile', () => {
 		socket.emit('relogin', sessionStorage.getItem('info_user'));
 	});
