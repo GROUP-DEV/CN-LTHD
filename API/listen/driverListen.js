@@ -3,6 +3,7 @@ drive_process = require('../process/driveProcess'),
 user_process = require('../process/userProcess'),
 book_process = require('../process/bookProcess');
 
+var md5 = require('md5');
 var server = http.Server(require('express')());
 var wss = require('socket.io')(server);
 
@@ -19,6 +20,8 @@ waiting_response (boolean)
 
 //event sử lý client
 wss.on('connection', socket => {
+    console.log(`${socket.id} connectted!!!`);
+
     socket.emit('news', { hello: 'world' });
 
     //callback socket
@@ -27,9 +30,7 @@ wss.on('connection', socket => {
 
         listDrive.splice(listDrive.indexOf(socket));
     });
-    socket.on('SEND_MESSAGE', (data) => {
-        console.log(data.hello);
-    });
+
     socket.on('updateToken',info=>{
         user_process.updateToken(info.id,info.token).then(rows=>{
             if(rows.length==0){
@@ -50,17 +51,22 @@ wss.on('connection', socket => {
             }
             else if(rows.length == 1 
                 && (rows[0].mail == info.user || rows[0].phone == info.user) 
-                && rows[0].password == info.pass 
+                && rows[0].password == md5(info.pass) 
                 && rows[0].group_user == '4')
             {
+                console.log(rows[0]);
                 user_process.changeStatus(rows[0].key, '1');
-                socket.m_info.key = rows[0].key;
-                socket.m_info.phone = rows[0].phone;
-                socket.m_info.num_seat = rows[0].num_seat;
-                socket.m_info.waiting_response = false;
-                socket.user=row[0];
+                let info = {
+                    key: rows[0].key,
+                    phone: rows[0].numberphone,
+                    num_seat: rows[0].num_seat,
+                    waiting_response: false
+                };
+                socket.m_info = info;
+                rows[0].password = undefined;
+                //socket.user=row[0];
                 listDrive.push(socket);
-                socket.emit('login_response', JSON.stringify(row[0]));
+                socket.emit('login_response', JSON.stringify(rows[0]));
             }
             else {
                 socket.emit('login_response', {key: 0});
