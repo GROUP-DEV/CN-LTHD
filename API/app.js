@@ -107,6 +107,25 @@ wss.on('connection', socket => {
         })
     });
 
+
+    if(typeof socket.m_info == 'undefined') {
+        socket.emit('request_resent_profile');
+    }
+
+    // tu dong nhan lai thong tin
+    socket.on('relogin', info_user => {
+        user_process.changeStatus(info_user.key, '1');
+        let info = {
+            key: info_user.key,
+            phone: info_user.numberphone,
+            num_seat: info_user.num_seat,
+            waiting_response: false
+        };
+        socket.m_info = info;
+        //socket.user=row[0];
+        listDrive.push(socket);
+    });
+
     // khi lai xe dang nhap
     // info = [phone or email, pass]
     socket.on('login', info => {
@@ -120,14 +139,19 @@ wss.on('connection', socket => {
                 && rows[0].password == info.pass 
                 && rows[0].group_user == '4')
             {
+                console.log(rows[0]);
                 user_process.changeStatus(rows[0].key, '1');
-                socket.m_info.key = rows[0].key;
-                socket.m_info.phone = rows[0].phone;
-                socket.m_info.num_seat = rows[0].num_seat;
-                socket.m_info.waiting_response = false;
-                socket.user=row[0];
+                let info = {
+                    key: rows[0].key,
+                    phone: rows[0].numberphone,
+                    num_seat: rows[0].num_seat,
+                    waiting_response: false
+                };
+                socket.m_info = info;
+                rows[0].password = undefined;
+                //socket.user=row[0];
                 listDrive.push(socket);
-                socket.emit('login_response', JSON.stringify(row[0]));
+                socket.emit('login_response', JSON.stringify(rows[0]));
             }
             else {
                 socket.emit('login_response', {key: 0});

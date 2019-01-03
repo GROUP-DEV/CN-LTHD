@@ -1,6 +1,6 @@
 //alert("123456");
 var socket = io('http://localhost:2471', {transports: ['websocket', 'polling', 'flashsocket']});
-
+socket.close();
 $(document).ready(function() {
 
 	// check da dang nhap chua
@@ -75,8 +75,7 @@ $(document).ready(function() {
 		socket.emit('reject_request', sessionStorage.getItem('info_booked_car'));
 	});
 
-
 	socket.on('request_resent_profile', () => {
-
+		socket.emit('relogin', sessionStorage.getItem('info_user'));
 	});
 });
