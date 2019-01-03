@@ -83,13 +83,11 @@ router.post('/login', (req, res) => {
 				token=createRefreshToken;
 				user.updateToken(rows[0].key,token);
 			}
-			console.log(acToken);
 
 			res.json({
 			user: userAuth,
 			access_token: acToken,
 			refresh_token: token});
-			console.log(res);
 			
 		}else{
 			res.status(405).send({message: `Don't found user`});

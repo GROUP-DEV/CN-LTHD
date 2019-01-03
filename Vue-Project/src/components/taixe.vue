@@ -473,7 +473,8 @@ import io from 'socket.io-client';
                 currentPlace: null,
                 active:'active',
                 ishowTB:'',
-                socket : io('localhost:1742')
+                                socket : io('localhost:1742')
+
             }
         },
         mounted () {
