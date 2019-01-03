@@ -500,6 +500,8 @@
                 searchCar(){
                     this.clLoader = 'classShowloader';
                    this.axios.defaults.headers.common['x-access-token'] =this.lgName.access_token;
+                    this.axios.defaults.headers.common['x-refresh-token'] =this.lgName.refresh_token;
+
                    this.axios.get('http://localhost:1742/b/')   
                     .then(response =>{
                       this.clLoader = 'classHiddenloader    ';
@@ -515,6 +517,7 @@
                    this.isshowdetail = 'show-detail ';
                    alert(phone);
                    this.axios.defaults.headers.common['x-access-token'] =this.lgName.access_token;
+                                       this.axios.defaults.headers.common['x-refresh-token'] =this.lgName.refresh_token;
                    this.axios.post("http://localhost:1742/b/getRequestFromPhone",{'phone_customer':phone})
                     .then((response) => {  
                         this.fromDetail = response.data[0]; 
@@ -530,6 +533,8 @@
                 // load list request
                 loadRequest(){
                    this.axios.defaults.headers.common['x-access-token'] =this.lgName.access_token;
+                                       this.axios.defaults.headers.common['x-refresh-token'] =this.lgName.refresh_token;
+
                    this.axios.get('http://localhost:1742/b/')   
                     .then(response =>{
                       console.log(response.data);

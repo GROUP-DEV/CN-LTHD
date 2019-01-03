@@ -423,6 +423,8 @@
                         return;
                     }
                     this.axios.defaults.headers.common['x-access-token'] =this.lgName.access_token;
+                                        this.axios.defaults.headers.common['x-refresh-token'] =this.lgName.refresh_token;
+
                     this.axios.post("http://localhost:1742/b/bookcar",this.infoRequest)
                     .then((response) => {
                         alert(response.data.message);

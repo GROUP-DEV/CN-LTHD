@@ -14,7 +14,7 @@ var verifyAccess=(req,res,next)=>{
                 {
 					var refToken=user.findRefeshToken(refreshtoken).then(rows=>{
 						if(rows.length == 1 ){
-							createNewToken(ref_token,req,res,next);
+							createNewToken(req,res,next);
 						}else{
 							res.statusCode=403;
 							res.json({
