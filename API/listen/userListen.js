@@ -5,46 +5,27 @@ var router = express.Router();
 
 var verifyAccess=(req,res,next)=>{
 	var token=req.headers['x-access-token'];
-	var refreshtoken=req.headers['x-refresh-token'];
-
 	if(token){
 		jwt.verify(token,'7avodoilc', (err,payload) => {
 			if(err){
-                if(err.message==='jwt expired')
-                {
-					var refToken=user.findRefeshToken(refreshtoken).then(rows=>{
-						if(rows.length == 1 ){
-							createNewToken(req,res,next);
-						}else{
-							res.statusCode=403;
-							res.json({
-							  returnCode:0,
-							  message:'INVALID TOKEN',
-							  error:err
-							});
-						}
-					});
-                }else{
-                  res.statusCode=403;
-                  res.json({
-                    returnCode:0,
-                    message:'INVALID TOKEN',
-                    error:err
-                  });
-                }
-            }else{
-                console.log(user);
-                req.token_payload=payload;
+				res.statusCode=403;
+				res.JSON({
+					msg:'Invalid token',
+					error: err
+				});
+			}else{
+				req.token_payload=payload;
 				next();
-            }
-		})
-	}else{
-		res.statusCode=403;
-		res.JSON({
-			msg:'No token found'
-		});
-	}
-}
+			}
+			})
+		}else{
+			res.statusCode=403;
+				res.JSON({
+					msg:'Invalid token',
+					error: err
+				});
+			}
+		}
 
 var createRefreshToken= function createRefreshToken(){
 	var str=randomstring.generate({

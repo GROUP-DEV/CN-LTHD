@@ -73,7 +73,6 @@ var verifyAccess=(req,res,next)=>{
 
 app.use('/u', require('./listen/userListen'));
 app.use('/b', require('./listen/bookListen'));
-require('./listen/driverListen');
 
 
 var port =1742;
