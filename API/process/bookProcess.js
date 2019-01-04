@@ -54,7 +54,7 @@ exports.bookCar = function(name, phone, address, note, seat, time_book) {
 			('${id_customer}', 
 			'${address}', 
 			'${note}', 
-			'0', 
+			'chưa được định vị', 
 			'${seat}', 
 			'${time_book}')`;
 		return db.write(sql);
