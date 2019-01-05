@@ -204,4 +204,37 @@ wss.on('connection', socket => {
             console.log(err);
         });
     });
+
+    processSendRequestToDriver = function(info_request) {
+        var location_request = `${ info_request.geocoding_lat },${ info_request.geocoding_lon }`;
+        
+        var len = listDrive.length;
+        let max = -1;
+        for (var j = 0; j < len; j++) {
+            var location_drive = `${ listDrive[j].m_info.latitude },${ listDrive[j].m_info.longitude }`, 
+            location_drive_max = (max == -1 ? '' : `${ listDrive[max].m_info.latitude },${ listDrive[max].m_info.longitude }`);
+
+            if(drive_process.distance(location_drive, local_request) > (max == -1 ? 0 : drive_process.distance(location_drive_max, local_request)) 
+                && listDrive[j].m_info.waiting_response == false)
+                max = j;
+        }
+        if(max != -1) {
+            listDrive[max].emit('send_request', info_request);
+            listDrive[max].m_info.waiting_response = true;
+        }
+    }
+
+    // receive request book car and process send request to driver
+    setInterval(() => {
+        drive_process.getListBookedCarInStatuLocated()
+        .then(rows => {
+            for (var i = 0; i < rows.length; i++) {
+                processSendRequestToDriver(rows[i]);
+            }
+        })
+        .catch(err => {
+            console.log(`Error when get list book car statu-ing locatived.`);
+            console.log(err);
+        })
+    }, 2500);
 });
