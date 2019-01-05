@@ -36,7 +36,7 @@ var createRefreshToken= function createRefreshToken(){
 	  length: 30,
 	  charset: '7avodoilc'
   });
-	return str
+	return str;
   }
   
 
@@ -120,5 +120,17 @@ router.post('/loadRequestASC',(req,res)=>{
 		res.status(400).send(JSON.stringify(err));
 	});
 });
+
+// locahost:<port>/book/status
+router.post('/changeStatus', (req,res) => {
+	book.changeStatus(req.body.phone_customer, req.body.time_request, req.body.status_new)
+	.then(value => {
+		res.status(200).send({message: 'Đã chuyển trạng thái thành công!!!'});
+	})
+	.catch(err => {
+		console.log(err);
+		res.status(400).send(JSON.stringify(err));		
+	});
+})
 
 module.exports = router;
