@@ -66,7 +66,7 @@ exports.bookCar = function(name, phone, address, note, seat, time_book) {
 }
 
 exports.getDateCurrent = function() {
-	var current = new Date();
+	var current = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 	return `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 }
 
