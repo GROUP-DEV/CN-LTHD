@@ -178,12 +178,22 @@ wss.on('connection', socket => {
     socket.on('accept_request', info => {
         book_process.setDriver(info.phone, info.time_book, socket.m_info.key);
         book_process.changeStatus(info.phone, info.time_book, 'đã có xe nhận');
+        user_process.changeStatus(socket.m_info.key, '1');
     });
 
     // khi khong muon nhan yeu cau thi se nhan ham nay
     // info = [phone (of request), time_book (car)]
     socket.on('reject_request', info => {
         book_process.changeStatus(info.phone, info.time_book, 'đã định vị xong');
+        listDrive[max].m_info.waiting_response = false;
+    });
+
+    // khi da khi da cho khach toi dia diem dich
+    // info = [phone (of request), time_book (car)]
+    socket.on('finish_request', info => {
+        book_process.changeStatus(info.phone, info.time_book, 'đã hoàn thành');
+        user_process.changeStatus(socket.m_info.key, '0');
+        listDrive[max].m_info.waiting_response = false;
     });
 
     // gui yeu cau tim nguoi de cho 
@@ -205,6 +215,9 @@ wss.on('connection', socket => {
         });
     });
 
+    // ham xac dinh tai xe nao gan nhat de gui thong tin yeu cau
+    // khi da xac dinh duoc tai xedo thi gui toanbo thong tin yeu cau cho tai xe qua ham:
+    //      'send_request' kèm theo toàn bộ thong tin
     processSendRequestToDriver = function(info_request) {
         var location_request = `${ info_request.geocoding_lat },${ info_request.geocoding_lon }`;
         
@@ -224,7 +237,7 @@ wss.on('connection', socket => {
         }
     }
 
-    // receive request book car and process send request to driver
+    // sau 2.5s se chay lai ham nay mot lan
     setInterval(() => {
         drive_process.getListBookedCarInStatuLocated()
         .then(rows => {
