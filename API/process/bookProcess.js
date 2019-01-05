@@ -98,9 +98,9 @@ LEFT JOIN user ON user.id = BookCar.biker where customer.phone = '${phone_custom
 
 exports.changeStatus = function(phone_of_customer, time_sent_request, status_wish_change) {
 	var sql = `UPDATE BookCar 
-SET status LIKE ${status_wish_change} 
+SET status LIKE '${status_wish_change}' 
 WHERE customer IN (SELECT id FROM customer WHERE phone LIKE '${phone_of_customer}')
-AND time like ${time_sent_request};`;
+AND time like '${time_sent_request}';`;
 	return db.write(sql);
 }
 
