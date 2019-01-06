@@ -116,7 +116,7 @@ wss.on('connection', socket => {
     // tu dong nhan lai thong tin
     socket.on('relogin', info_user => {
         user_process.changeStatus(info_user.key, '1');
-        let info = {
+        var info = {
             key: info_user.key,
             phone: info_user.numberphone,
             num_seat: info_user.num_seat,
@@ -201,7 +201,7 @@ wss.on('connection', socket => {
     socket.on('search_request', () => {
         drive_process.getListBookedCarInStatuLocated()
         .then(rows => {
-            let index_request_has_distance_min = 0;
+            var index_request_has_distance_min = 0;
             for (var i = 1; i < rows.length; i++) {
                 if(drive_process.distance(`${rows[i].geocoding_lat},${rows[i].geocoding_lon}`, `${socket.latitude},${socket.longitude}`) 
                     > drive_process.distance(`${rows[index_request_has_distance_min].geocoding_lat},${rows[index_request_has_distance_min].geocoding_lon}`, `${socket.latitude},${socket.longitude}`))
@@ -223,15 +223,19 @@ wss.on('connection', socket => {
         var local_request = `${ info_request.geocoding_lat },${ info_request.geocoding_lon }`;
         console.log('local_request '+local_request);
         var len = listDrive.length;
-        let max = -1;
+        var max = -1;
         for (var j = 0; j < len; j++) {
-            var location_drive = `${ listDrive[j].m_info.latitude },${ listDrive[j].m_info.longitude }`, 
+            var location_drive = `${ listDrive[j].m_info.latitude },${ listDrive[j].m_info.longitude }`,
             location_drive_max = (max == -1 ? '' : `${ listDrive[max].m_info.latitude },${ listDrive[max].m_info.longitude }`);
-console.log('location_drive '+location_drive);
-            if(drive_process.distance(location_drive, local_request) > (max == -1 ? 0 : drive_process.distance(location_drive_max, local_request)) 
+            console.log(drive_process.distance(location_drive, local_request)+' vs '+drive_process.distance(location_drive_max, local_request));
+            if(drive_process.distance(location_drive, local_request) < (max == -1 ? 9999 : drive_process.distance(location_drive_max, local_request)) 
                 && listDrive[j].m_info.waiting_response == false)
+            {
+                console.log('change to '+i +' from '+max);
                 max = j;
+            }
         }
+        console.log('choose driver no: '+max);
         if(max != -1) {
             listDrive[max].emit('send_request', info_request);
             listDrive[max].m_info.waiting_response = true;

@@ -5,14 +5,15 @@ var HasLogInSuccess = false;
 $(document).ready(function() {
 
 	// check da dang nhap chua
-	if(typeof sessionStorage.getItem('info_user') == 'undefined') {
+	if(sessionStorage.getItem('info_user') !== null) {
 		$('#logindiv').hide();
-
-		// cap nhat tu dong vi tri hien tai cua xe
+		socket.open();
+		socket.emit('relogin', sessionStorage.getItem('info_user'));
+			// cap nhat tu dong vi tri hien tai cua xe
 		setInterval(function() {
 			var info_location = {
-				latitude: 150,
-				longitude: 250
+				latitude: 10.8024368,
+				longitude: 106.714277
 			};
 			socket.emit('update_location_driver', info_location);
 		}, 1000);

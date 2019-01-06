@@ -36,11 +36,11 @@ exports.calculatorDistance = function(from, to) {
                     var destination = distances.destination_addresses[j];
                     if (distances.rows[0].elements[j].status == 'OK') {
                         var distance = distances.rows[i].elements[j].distance.text;
-                        console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance.replace(' km', '').replace(/,/g, ''));
+                        //console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance.replace(' km', '').replace(/,/g, ''));
                         return parseFloat(distance.replace(' km', '').replace(/,/g, ''));
                     } else {
-                        console.log(destination + ' is not reachable by land from ' + origin);
-                        return 0;
+                        //console.log(destination + ' is not reachable by land from ' + origin);
+                        return 9999;
                     }
                 }
             }
