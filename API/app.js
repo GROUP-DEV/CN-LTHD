@@ -81,8 +81,6 @@ var server=app.listen(port, () => {
 	console.log(`Open with address: ${process.env.port ? require('ip').address() : 'localhost'}:${port}`);
 });
 
-var listDrive=[];
-
 var wss = require('socket.io')(server);
 wss.on('connection', socket => {
     console.log(socket.id)
@@ -92,8 +90,6 @@ wss.on('connection', socket => {
     //callback socket
     socket.on('disconnection', () => {
         user_process.changeStatus(socket.m_info.key, '0');
-
-        listDrive.splice(listDrive.indexOf(socket));
     });
     socket.on('SEND_MESSAGE', (data) => {
         console.log(data.hello);
@@ -115,6 +111,7 @@ wss.on('connection', socket => {
 
     // tu dong nhan lai thong tin
     socket.on('relogin', info_user => {
+        console.log('relogin '+info_user);
         user_process.changeStatus(info_user.key, '1');
         var info = {
             key: info_user.key,
@@ -124,7 +121,6 @@ wss.on('connection', socket => {
         };
         socket.m_info = info;
         //socket.user=row[0];
-        listDrive.push(socket);
     });
 
     // khi lai xe dang nhap
@@ -151,7 +147,6 @@ wss.on('connection', socket => {
                 socket.m_info = info;
                 rows[0].password = undefined;
                 //socket.user=row[0];
-                listDrive.push(socket);
                 socket.emit('login_response', JSON.stringify(rows[0]));
             }
             else {
@@ -168,6 +163,7 @@ wss.on('connection', socket => {
     // cap nhat vi tri cua lai xe
     // info = [latitude, longitude]
     socket.on('update_location_driver', info => {
+        if(socket.m_info === undefined) socket.m_info = [];
         socket.m_info.latitude = info.latitude;
         socket.m_info.longitude = info.longitude;
         console.log(socket.m_info.latitude+'   '+socket.m_info.longitude);
@@ -186,7 +182,7 @@ wss.on('connection', socket => {
     // info = [phone (of request), time_book (car)]
     socket.on('reject_request', info => {
         book_process.changeStatus(info.phone, info.time_book, 'Đã được định vị');
-        listDrive[max].m_info.waiting_response = false;
+        socket.m_info.waiting_response = false;
     });
 
     // khi da khi da cho khach toi dia diem dich
@@ -194,7 +190,7 @@ wss.on('connection', socket => {
     socket.on('finish_request', info => {
         book_process.changeStatus(info.phone, info.time_book, 'Đã hoàn thành');
         user_process.changeStatus(socket.m_info.key, '0');
-        listDrive[max].m_info.waiting_response = false;
+        socket.m_info.waiting_response = false;
     });
 
     // gui yeu cau tim nguoi de cho 
@@ -215,40 +211,29 @@ wss.on('connection', socket => {
             console.log(err);
         });
     });
-
-    // ham xac dinh tai xe nao gan nhat de gui thong tin yeu cau
-    // khi da xac dinh duoc tai xedo thi gui toanbo thong tin yeu cau cho tai xe qua ham:
-    //      'send_request' kèm theo toàn bộ thong tin
-    processSendRequestToDriver = function(info_request) {
-        var local_request = `${ info_request.geocoding_lat },${ info_request.geocoding_lon }`;
-        console.log('local_request '+local_request);
-        var len = listDrive.length;
-        var max = -1;
-        for (var j = 0; j < len; j++) {
-            var location_drive = `${ listDrive[j].m_info.latitude },${ listDrive[j].m_info.longitude }`,
-            location_drive_max = (max == -1 ? '' : `${ listDrive[max].m_info.latitude },${ listDrive[max].m_info.longitude }`);
-            console.log(drive_process.distance(location_drive, local_request)+' vs '+drive_process.distance(location_drive_max, local_request));
-            if(drive_process.distance(location_drive, local_request) < (max == -1 ? 9999 : drive_process.distance(location_drive_max, local_request)) 
-                && listDrive[j].m_info.waiting_response == false)
-            {
-                console.log('change to '+i +' from '+max);
-                max = j;
-            }
-        }
-        console.log('choose driver no: '+max);
-        if(max != -1) {
-            listDrive[max].emit('send_request', info_request);
-            listDrive[max].m_info.waiting_response = true;
-        }
-    }
-
+   
     // sau 2.5s se chay lai ham nay mot lan
     setInterval(() => {
         drive_process.getListBookedCarInStatuLocated()
         .then(rows => {
             console.log(rows.length);
-            for (var i = 0; i < rows.length; i++) {
-                processSendRequestToDriver(rows[i]);
+            var index_min = -1;
+            var local_driver = `${ socket.m_info.latitude },${ socket.m_info.longitude }`;
+            
+            for (var i = 0; i < rows.length && !socket.m_info.waiting_response; i++) {
+                var local_request = `${ rows[i].geocoding_lat },${ rows[i].geocoding_lon }`,
+                local_request_min = (index_min == -1 ? '' : `${ rows[index_min].m_info.latitude },${ rows[index_min].m_info.longitude }`);
+                if(drive_process.distance(local_driver, local_request) < (index_min == -1 ? 9999 : drive_process.distance(local_driver, local_request_min)))
+                {
+                    console.log('change to '+i +' from '+index_min);
+                    index_min = j;
+                }       
+            }
+
+            if(index_min !== -1){
+                socket.emit('send_request', rows[index_min]);
+                socket.m_info.waiting_response = true;
+                book_process.changeStatus(rows[index_min].customer_phone, rows[index_min].time_request, 'Đang chờ phản hồi');
             }
         })
         .catch(err => {

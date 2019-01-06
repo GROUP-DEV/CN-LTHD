@@ -4,19 +4,22 @@ socket.close();
 var HasLogInSuccess = false;
 $(document).ready(function() {
 
+	// cap nhat tu dong vi tri hien tai cua xe
+	setInterval(function() {
+		var info_location = {
+			latitude: 10.7469388,
+			longitude: 106.6868776
+		};
+		if(HasLogInSuccess)
+			socket.emit('update_location_driver', info_location);
+	}, 2500);
+
 	// check da dang nhap chua
 	if(sessionStorage.getItem('info_user') !== null) {
 		$('#logindiv').hide();
 		socket.open();
 		socket.emit('relogin', sessionStorage.getItem('info_user'));
-			// cap nhat tu dong vi tri hien tai cua xe
-		setInterval(function() {
-			var info_location = {
-				latitude: 10.8024368,
-				longitude: 106.714277
-			};
-			socket.emit('update_location_driver', info_location);
-		}, 1000);
+		HasLogInSuccess = true;
 	}
 	else {
 		$('#logindiv').show();
@@ -55,8 +58,8 @@ $(document).ready(function() {
 			sessionStorage.setItem('info_user',info);
 			HasLogInSuccess = true;
 			var info_location = {
-				latitude: 10.8024368,
-				longitude: 106.714277
+				latitude: 10.7469388,
+				longitude: 106.6868776
 			};
 			socket.emit('update_location_driver', info_location);
 		}
@@ -91,4 +94,6 @@ $(document).ready(function() {
 		if(HasLogInSuccess)
 			socket.emit('relogin', sessionStorage.getItem('info_user'));
 	});
+
+	socket.on('disconnection')
 });
