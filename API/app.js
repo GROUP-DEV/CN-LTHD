@@ -81,6 +81,8 @@ var server=app.listen(port, () => {
 	console.log(`Open with address: ${process.env.port ? require('ip').address() : 'localhost'}:${port}`);
 });
 
+var listDrive=[];
+
 var wss = require('socket.io')(server);
 wss.on('connection', socket => {
     console.log(socket.id)
@@ -105,7 +107,6 @@ wss.on('connection', socket => {
             }
         })
     });
-
 
     // khi co ket noi toi ma khon co thong tin thi gui yeu cau nhan lai thong tin
     if(typeof socket.m_info == 'undefined') {
@@ -136,7 +137,7 @@ wss.on('connection', socket => {
             }
             else if(rows.length == 1 
                 && (rows[0].mail == info.user || rows[0].phone == info.user) 
-                && rows[0].password == info.pass 
+                && rows[0].password == require('MD5')(info.pass) 
                 && rows[0].group_user == '4')
             {
                 console.log(rows[0]);
@@ -169,7 +170,7 @@ wss.on('connection', socket => {
     socket.on('update_location_driver', info => {
         socket.m_info.latitude = info.latitude;
         socket.m_info.longitude = info.longitude;
-
+        console.log(socket.m_info.latitude+'   '+socket.m_info.longitude);
         drive_process.updateLocationCurrent(socket.m_info.key, info.latitude, info.longitude);
     });
     
@@ -177,21 +178,21 @@ wss.on('connection', socket => {
     // info = [phone (of request), time_book (car)]
     socket.on('accept_request', info => {
         book_process.setDriver(info.phone, info.time_book, socket.m_info.key);
-        book_process.changeStatus(info.phone, info.time_book, 'đã có xe nhận');
+        book_process.changeStatus(info.phone, info.time_book, 'Đã có xe nhận');
         user_process.changeStatus(socket.m_info.key, '1');
     });
 
     // khi khong muon nhan yeu cau thi se nhan ham nay
     // info = [phone (of request), time_book (car)]
     socket.on('reject_request', info => {
-        book_process.changeStatus(info.phone, info.time_book, 'đã định vị xong');
+        book_process.changeStatus(info.phone, info.time_book, 'Đã được định vị');
         listDrive[max].m_info.waiting_response = false;
     });
 
     // khi da khi da cho khach toi dia diem dich
     // info = [phone (of request), time_book (car)]
     socket.on('finish_request', info => {
-        book_process.changeStatus(info.phone, info.time_book, 'đã hoàn thành');
+        book_process.changeStatus(info.phone, info.time_book, 'Đã hoàn thành');
         user_process.changeStatus(socket.m_info.key, '0');
         listDrive[max].m_info.waiting_response = false;
     });
@@ -207,7 +208,7 @@ wss.on('connection', socket => {
                     index_request_has_distance_min = i;
             }
             socket.emit('sent_request', rows[number_request_sent]);
-            book_process.changeStatus(rows[number_request_sent].customer_phone, rows[number_request_sent].time_request, 'đang nhận phản hồi');
+            book_process.changeStatus(rows[number_request_sent].customer_phone, rows[number_request_sent].time_request, 'Đang nhận phản hồi');
         })
         .catch(err => {
             console.log(`Error when get list book car statu-ing locatived.`);
@@ -219,14 +220,14 @@ wss.on('connection', socket => {
     // khi da xac dinh duoc tai xedo thi gui toanbo thong tin yeu cau cho tai xe qua ham:
     //      'send_request' kèm theo toàn bộ thong tin
     processSendRequestToDriver = function(info_request) {
-        var location_request = `${ info_request.geocoding_lat },${ info_request.geocoding_lon }`;
-        
+        var local_request = `${ info_request.geocoding_lat },${ info_request.geocoding_lon }`;
+        console.log('local_request '+local_request);
         var len = listDrive.length;
         let max = -1;
         for (var j = 0; j < len; j++) {
             var location_drive = `${ listDrive[j].m_info.latitude },${ listDrive[j].m_info.longitude }`, 
             location_drive_max = (max == -1 ? '' : `${ listDrive[max].m_info.latitude },${ listDrive[max].m_info.longitude }`);
-
+console.log('location_drive '+location_drive);
             if(drive_process.distance(location_drive, local_request) > (max == -1 ? 0 : drive_process.distance(location_drive_max, local_request)) 
                 && listDrive[j].m_info.waiting_response == false)
                 max = j;
@@ -241,6 +242,7 @@ wss.on('connection', socket => {
     setInterval(() => {
         drive_process.getListBookedCarInStatuLocated()
         .then(rows => {
+            console.log(rows.length);
             for (var i = 0; i < rows.length; i++) {
                 processSendRequestToDriver(rows[i]);
             }

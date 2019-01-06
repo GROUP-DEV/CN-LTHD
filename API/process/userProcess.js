@@ -13,6 +13,7 @@ exports.logIn = function(user, pass) {
 exports.logIn1 = function(user, pass) {
 	var sql = `SELECT id 'key', username 'fullname', phone 'numberphone', email 'mail', seat 'num_seat', role 'group_user', password FROM user 
 	WHERE (MD5(email) LIKE MD5('${user}') OR MD5(phone) LIKE MD5('${user}')) AND password like MD5('${pass}')`;
+	console.log(sql);
 	return db.load(sql);
 }
 

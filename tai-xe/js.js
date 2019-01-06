@@ -1,6 +1,7 @@
 //alert("123456");
 var socket = io('http://localhost:1742', {transports: ['websocket', 'polling', 'flashsocket']});
 socket.close();
+var HasLogInSuccess = false;
 $(document).ready(function() {
 
 	// check da dang nhap chua
@@ -14,7 +15,7 @@ $(document).ready(function() {
 				longitude: 250
 			};
 			socket.emit('update_location_driver', info_location);
-		}, 5000);
+		}, 1000);
 	}
 	else {
 		$('#logindiv').show();
@@ -32,6 +33,7 @@ $(document).ready(function() {
 
 	// dang nhap he thong
 	$(document).on('click', '#loginbtn', function() {
+		socket.open();
 		alert($('#username').val()+'   '+$('#password').val());
 		let info = {user: $('#username').val(),
 		pass: $('#password').val()};
@@ -50,6 +52,12 @@ $(document).ready(function() {
 		if(typeof info.key === 'undefined') {
 			$('#logindiv').hide();
 			sessionStorage.setItem('info_user',info);
+			HasLogInSuccess = true;
+			var info_location = {
+				latitude: 10.8024368,
+				longitude: 106.714277
+			};
+			socket.emit('update_location_driver', info_location);
 		}
 		else if(info.key == -1) {
 			alert('Có lỗi xảy ra khi server xử lý.');
@@ -61,7 +69,9 @@ $(document).ready(function() {
 
 	// nhan thong tin nhan dat xe
 	//info_request: customer_name, customer_phone, welcome_address, note, status, seats, time_request, geocoding_lat, geocoding_lon
-	socket.on('sent_request', info_request => {
+	socket.on('send_request', info_request => {
+		alert(info_request);
+		console.log(info_request);
 		sessionStorage.setItem('info_booked_car', info_request);
 	});
 
@@ -75,9 +85,9 @@ $(document).ready(function() {
 		socket.emit('reject_request', sessionStorage.getItem('info_booked_car'));
 	});
 
-
 	// khi server gui yeu cau nhan lai thong tin
 	socket.on('request_resent_profile', () => {
-		socket.emit('relogin', sessionStorage.getItem('info_user'));
+		if(HasLogInSuccess)
+			socket.emit('relogin', sessionStorage.getItem('info_user'));
 	});
 });

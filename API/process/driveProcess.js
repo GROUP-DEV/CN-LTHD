@@ -9,7 +9,7 @@ FROM BookCar INNER JOIN customer ON BookCar.customer = customer.id
 LEFT JOIN geocode g1 ON BookCar.geocodin = g1.id 
 LEFT JOIN geocode g2 ON BookCar.regeocoding = g2.id 
 LEFT JOIN user ON BookCar.biker = user.id
-WHERE BookCar.status LIKE N'đã định vị xong';`;
+WHERE BookCar.status LIKE N'Đã được định vị';`;
 	return db.load(sql);
 }
 
