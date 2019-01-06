@@ -1,5 +1,5 @@
 //alert("123456");
-var socket = io('http://localhost:2471', {transports: ['websocket', 'polling', 'flashsocket']});
+var socket = io('http://localhost:1742', {transports: ['websocket', 'polling', 'flashsocket']});
 socket.close();
 $(document).ready(function() {
 
