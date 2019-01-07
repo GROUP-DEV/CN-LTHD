@@ -3,7 +3,7 @@ map = require('../other/google_maps');
 
 exports.getListBookedCarInStatuLocated = function() {
 	let sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', 
-BookCar.address 'welcome_address', BookCar.note, BookCar.status, BookCar.seats, BookCar.time 'time_request', 
+BookCar.address 'welcome_address', BookCar.note, BookCar.status, BookCar.seats, DATE_FORMAT(BookCar.time, '%Y-%m-%d %H:%i:%s') 'time_request', 
 g1.latitude 'geocoding_lat', g1.longitude 'geocoding_lon'
 FROM BookCar INNER JOIN customer ON BookCar.customer = customer.id 
 LEFT JOIN geocode g1 ON BookCar.geocodin = g1.id 
@@ -31,7 +31,7 @@ WHERE id =  '${ id_user }'`;
 
 exports.getBookCar = function(phone, time_book) {
 	let sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', 
-BookCar.address 'welcome_address', BookCar.note, BookCar.status, BookCar.seats, BookCar.time 'time_request', 
+BookCar.address 'welcome_address', BookCar.note, BookCar.status, BookCar.seats, DATE_FORMAT(BookCar.time, '%Y-%m-%d %H:%i:%s') 'time_request', 
 g1.latitude 'geocoding_lat', g1.longitude 'geocoding_lon'
 FROM BookCar INNER JOIN customer ON BookCar.customer = customer.id 
 LEFT JOIN geocode g1 ON BookCar.geocodin = g1.id 

@@ -166,7 +166,7 @@ wss.on('connection', socket => {
         if(socket.m_info === undefined) socket.m_info = [];
         socket.m_info.latitude = info.latitude;
         socket.m_info.longitude = info.longitude;
-        console.log(socket.m_info.latitude+'   '+socket.m_info.longitude);
+        //console.log(socket.m_info.latitude+'   '+socket.m_info.longitude);
         drive_process.updateLocationCurrent(socket.m_info.key, info.latitude, info.longitude);
     });
     
@@ -229,7 +229,7 @@ wss.on('connection', socket => {
                     < (index_min == -1 ? 9999 : 
                         drive_process.distance1(socket.m_info.latitude, socket.m_info.longitude, rows[index_min].geocoding_lat, rows[index_min].geocoding_lon)))
                 {
-                    console.log('change to '+i +' from '+index_min);
+                    //console.log('change to '+i +' from '+index_min);
                     index_min = i;
                 }       
             }

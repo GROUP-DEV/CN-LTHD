@@ -2,7 +2,7 @@ var db = require('../other/cnt_mysql');
 
 exports.loadAll = function() {
     var sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone',
-BookCar.address 'welcome_address', BookCar.note, BookCar.seats, BookCar.time 'time_request',
+BookCar.address 'welcome_address', BookCar.note, BookCar.seats, DATE_FORMAT(BookCar.time, '%Y-%m-%d %H:%i:%s') 'time_request',
 g1.latitude 'geocoding_lat', g1.longitude 'geocoding_lon',
 g2.latitude 'reverse_geocoding_lat', g2.longitude 'reverse_geocoding_lon'
 FROM BookCar INNER JOIN customer ON BookCar.customer = customer.id
@@ -79,7 +79,8 @@ exports.set2GeoCoding = function(geocoding_id, phone_customer, date_book) {
 }
 
 exports.getAll = function() {
-	var sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', address, note, g1.latitude 'geo_lat', g1.longitude 'geo_lon', g2.latitude 're_geo_lat', g2.longitude 're_geo_lon', biker, time, BookCar.status, seats 
+	var sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', address, note, g1.latitude 'geo_lat', g1.longitude 'geo_lon',
+	 g2.latitude 're_geo_lat', g2.longitude 're_geo_lon', biker, DATE_FORMAT(time, '%Y-%m-%d %H:%i:%s'), BookCar.status, seats 
 FROM BookCar JOIN geocode g1 ON BookCar.geocodin = g1.id
 JOIN geocode g2 ON BookCar.regeocoding = g2.id
 JOIN customer ON BookCar.customer = customer.id
@@ -88,7 +89,8 @@ LEFT JOIN user ON user.id = BookCar.biker`;
 }
 
 exports.getRequestFromPhone = function(phone_customer) {
-	var sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', address, note, g1.latitude 'geo_lat', g1.longitude 'geo_lon', g2.latitude 're_geo_lat', g2.longitude 're_geo_lon', biker, time, BookCar.status, seats 
+	var sql = `SELECT customer.name 'customer_name', customer.phone 'customer_phone', address, note, g1.latitude 'geo_lat', g1.longitude 'geo_lon', 
+	g2.latitude 're_geo_lat', g2.longitude 're_geo_lon', biker, DATE_FORMAT(time, '%Y-%m-%d %H:%i:%s'), BookCar.status, seats 
 FROM BookCar JOIN geocode g1 ON BookCar.geocodin = g1.id
 JOIN geocode g2 ON BookCar.regeocoding = g2.id
 JOIN customer ON BookCar.customer = customer.id
@@ -101,6 +103,7 @@ exports.changeStatus = function(phone_of_customer, time_sent_request, status_wis
 SET status = '${status_wish_change}' 
 WHERE customer IN (SELECT c.id FROM customer c WHERE c.phone LIKE '${phone_of_customer}') 
 AND time like '${time_sent_request}';`;
+console.log(sql);
 	return db.write(sql);
 }
 
