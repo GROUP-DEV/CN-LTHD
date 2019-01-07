@@ -66,7 +66,7 @@ exports.bookCar = function(name, phone, address, note, seat, time_book) {
 }
 
 exports.getDateCurrent = function() {
-	var current = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+	var current = new Date();
 	return `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 }
 
@@ -103,14 +103,13 @@ exports.changeStatus = function(phone_of_customer, time_sent_request, status_wis
 SET status = '${status_wish_change}' 
 WHERE customer IN (SELECT c.id FROM customer c WHERE c.phone LIKE '${phone_of_customer}') 
 AND time like '${time_sent_request}';`;
-console.log(sql);
 	return db.write(sql);
 }
 
 exports.setDriver = function(phone_of_customer, time_sent_request, driver_id, time_accept = this.getDateCurrent()) {
 	var sql = `UPDATE BookCar
-SET biker = '${driver_id}', time_driver_accept = ${time_accept} 
+SET biker = '${driver_id}', time_driver_accept = '${time_accept}' 
 WHERE customer IN (SELECT id FROM customer WHERE phone LIKE '${phone_of_customer}')
-AND time like ${time_sent_request};`;
+AND time like '${time_sent_request}';`;
 	return db.write(sql);
 }

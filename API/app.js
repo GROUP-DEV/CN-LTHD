@@ -111,7 +111,8 @@ wss.on('connection', socket => {
 
     // tu dong nhan lai thong tin
     socket.on('relogin', info_user => {
-        console.log('relogin '+info_user);
+        info_user= JSON.parse(info_user);
+        //console.log('relogin '+info_user);
         user_process.changeStatus(info_user.key, '1');
         var info = {
             key: info_user.key,
@@ -173,9 +174,11 @@ wss.on('connection', socket => {
     // lai xe chap nhan yeu cau
     // info = [phone (of request), time_book (car)]
     socket.on('accept_request', info => {
-        book_process.setDriver(info.phone, info.time_book, socket.m_info.key);
-        book_process.changeStatus(info.phone, info.time_book, 'Đã có xe nhận');
-        user_process.changeStatus(socket.m_info.key, '1');
+        info=JSON.parse(info);
+        console.log(socket.m_info);
+        book_process.setDriver(info.customer_phone, info.time_request, socket.m_info.key);
+        book_process.changeStatus(info.customer_phone, info.time_request, 'Đã có xe nhận');
+        user_process.changeStatus(socket.m_info.key, '0');
     });
 
     // khi khong muon nhan yeu cau thi se nhan ham nay
@@ -189,7 +192,7 @@ wss.on('connection', socket => {
     // info = [phone (of request), time_book (car)]
     socket.on('finish_request', info => {
         book_process.changeStatus(info.phone, info.time_book, 'Đã hoàn thành');
-        user_process.changeStatus(socket.m_info.key, '0');
+        user_process.changeStatus(socket.m_info.key, '1');
         socket.m_info.waiting_response = false;
     });
 
@@ -237,7 +240,7 @@ wss.on('connection', socket => {
             if(index_min !== -1){
                 socket.emit('send_request', JSON.stringify(rows[index_min]));
                 socket.m_info.waiting_response = true;
-                //book_process.changeStatus(rows[index_min].customer_phone, rows[index_min].time_request, 'Đang chờ phản hồi');
+                book_process.changeStatus(rows[index_min].customer_phone, rows[index_min].time_request, 'Đang chờ phản hồi');
             }
         })
         .catch(err => {
