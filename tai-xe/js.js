@@ -78,6 +78,7 @@ $(document).ready(function() {
 	// nhan thong tin nhan dat xe
 	//info_request: customer_name, customer_phone, welcome_address, note, status, seats, time_request, geocoding_lat, geocoding_lon
 	socket.on('send_request', info_request => {
+		$('.wrapper-notification').show();
 		alert(info_request);
 		console.log(info_request);
 		sessionStorage.setItem('info_booked_car', info_request);
