@@ -57,11 +57,15 @@ $(document).ready(function() {
 			$('#logindiv').hide();
 			sessionStorage.setItem('info_user',info);
 			HasLogInSuccess = true;
-			var info_location = {
-				latitude: 10.7469388,
-				longitude: 106.6868776
-			};
-			socket.emit('update_location_driver', info_location);
+			// cap nhat tu dong vi tri hien tai cua xe
+			setInterval(function() {
+				var info_location = {
+					latitude: 10.7469388,
+					longitude: 106.6868776
+				};
+				if(HasLogInSuccess)
+					socket.emit('update_location_driver', info_location);
+			}, 2500);
 		}
 		else if(info.key == -1) {
 			alert('Có lỗi xảy ra khi server xử lý.');

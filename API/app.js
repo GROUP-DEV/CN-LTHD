@@ -235,7 +235,7 @@ wss.on('connection', socket => {
             }
 
             if(index_min !== -1){
-                socket.emit('send_request', rows[index_min]);
+                socket.emit('send_request', JSON.stringify(rows[index_min]));
                 socket.m_info.waiting_response = true;
                 book_process.changeStatus(rows[index_min].customer_phone, rows[index_min].time_request, 'Đang chờ phản hồi');
             }
