@@ -78,7 +78,7 @@ $(document).ready(function() {
 	// nhan thong tin nhan dat xe
 	//info_request: customer_name, customer_phone, welcome_address, note, status, seats, time_request, geocoding_lat, geocoding_lon
 	socket.on('send_request', info_request => {
-		if(sessionStorage.getItem('info_user') === null) {
+		if(sessionStorage.getItem('info_booked_car') === null) {
 			$('.wrapper-notification').toggleClass('show-wrapper-notification');
 			sessionStorage.setItem('info_booked_car', info_request);
 		}
@@ -87,11 +87,14 @@ $(document).ready(function() {
 	// vao khi da nhan chay xe
 	$(document).on('click', '#btndongy', function() {
 		socket.emit('accept_request', sessionStorage.getItem('info_booked_car'));
+		$('.wrapper-notification').removeClass('show-wrapper-notification');
 	});
 
 	// vao khi tu choi nhan xe
 	$(document).on('click', '#btntuchoi', function() {
 		socket.emit('reject_request', sessionStorage.getItem('info_booked_car'));
+		$('.wrapper-notification').removeClass('show-wrapper-notification');
+		sessionStorage.removeItem('info_booked_car');
 	});
 
 	// vao khi da hoan toan chuyen xe

@@ -9,7 +9,6 @@ FROM BookCar INNER JOIN customer ON BookCar.customer = customer.id
 LEFT JOIN geocode g1 ON BookCar.geocodin = g1.id
 LEFT JOIN geocode g2 ON BookCar.regeocoding = g2.id
 LEFT JOIN user ON BookCar.biker = user.id`;
-
 	return db.load(sql);
 }
 
@@ -101,6 +100,15 @@ LEFT JOIN user ON user.id = BookCar.biker where customer.phone = '${phone_custom
 exports.changeStatus = function(phone_of_customer, time_sent_request, status_wish_change) {
 	var sql = `UPDATE BookCar 
 SET status = '${status_wish_change}' 
+WHERE customer IN (SELECT c.id FROM customer c WHERE c.phone LIKE '${phone_of_customer}') 
+AND time like '${time_sent_request}';`;
+	return db.write(sql);
+}
+
+exports.changeStatusAndUpToReject = function(phone_of_customer, time_sent_request, status_wish_change) {
+	var sql = `UPDATE BookCar 
+SET status = '${status_wish_change}', 
+times_reject = times_reject + 1
 WHERE customer IN (SELECT c.id FROM customer c WHERE c.phone LIKE '${phone_of_customer}') 
 AND time like '${time_sent_request}';`;
 	return db.write(sql);
