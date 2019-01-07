@@ -221,12 +221,16 @@ wss.on('connection', socket => {
             var local_driver = `${ socket.m_info.latitude },${ socket.m_info.longitude }`;
             
             for (var i = 0; i < rows.length && !socket.m_info.waiting_response; i++) {
-                var local_request = `${ rows[i].geocoding_lat },${ rows[i].geocoding_lon }`,
-                local_request_min = (index_min == -1 ? '' : `${ rows[index_min].m_info.latitude },${ rows[index_min].m_info.longitude }`);
-                if(drive_process.distance(local_driver, local_request) < (index_min == -1 ? 9999 : drive_process.distance(local_driver, local_request_min)))
+                var local_request = `${ rows[i].geocoding_lat },${ rows[i].geocoding_lon }`;
+                console.log(drive_process.distance1(socket.m_info.latitude, socket.m_info.longitude, rows[i].geocoding_lat, rows[i].geocoding_lon)+'   '
+                    +(index_min == -1 ? 9999 : drive_process.distance1(socket.m_info.latitude, socket.m_info.longitude, rows[index_min].geocoding_lat, rows[index_min].geocoding_lon)));
+
+                if(drive_process.distance1(socket.m_info.latitude, socket.m_info.longitude, rows[i].geocoding_lat, rows[i].geocoding_lon) 
+                    < (index_min == -1 ? 9999 : 
+                        drive_process.distance1(socket.m_info.latitude, socket.m_info.longitude, rows[index_min].geocoding_lat, rows[index_min].geocoding_lon)))
                 {
                     console.log('change to '+i +' from '+index_min);
-                    index_min = j;
+                    index_min = i;
                 }       
             }
 

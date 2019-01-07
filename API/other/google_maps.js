@@ -1,6 +1,7 @@
 var distance = require('google-distance-matrix');
 var nodegeocoder = require('node-geocoder'),
 db = require('./cnt_mysql');
+var GeoPoint = require('geopoint');
 
 var options = {
     provider: 'google',
@@ -21,7 +22,7 @@ exports.calculatorDistance = function(from, to) {
     distance.key(options.apiKey);
     distance.units('metric');
 
-    distance.matrix(origins, destinations, function (err, distances) {
+    return distance.matrix(origins, destinations, function (err, distances) {
         if (err) {
             return console.log(err);
         }
@@ -37,7 +38,7 @@ exports.calculatorDistance = function(from, to) {
                     if (distances.rows[0].elements[j].status == 'OK') {
                         var distance = distances.rows[i].elements[j].distance.text;
                         console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance.replace(' km', '').replace(/,/g, ''));
-                        return parseFloat(distance.replace(' km', '').replace(/,/g, ''));
+                        return distance.replace(' km', '').replace(/,/g, '');
                     } else {
                         console.log(destination + ' is not reachable by land from ' + origin);
                         return 9999;
@@ -46,4 +47,11 @@ exports.calculatorDistance = function(from, to) {
             }
         }
     });
+}
+
+exports.calculatorDistance1 = function(fromLat, fromLon, toLat, toLon) {
+    var loc1 = new GeoPoint(fromLat, fromLon);
+    var loc2 = new GeoPoint(toLat, toLon);
+    var dist = loc1.distanceTo(loc2, true);
+    return dist;
 }

@@ -17,6 +17,10 @@ exports.distance = function(from, to) {
 	return map.calculatorDistance(from, to);
 }
 
+exports.distance1 = function(fromlat, fromLon, toLat, toLon) {
+	return map.calculatorDistance1(fromlat, fromLon, toLat, toLon);
+}
+
 exports.updateLocationCurrent = function(id_user, latitude, longitude) {
 	let sql = `UPDATE user 
 SET latitude = '${ latitude }', 
