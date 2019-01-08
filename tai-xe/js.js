@@ -81,6 +81,7 @@ $(document).ready(function() {
 		if(sessionStorage.getItem('info_booked_car') === null) {
 			$('.wrapper-notification').toggleClass('show-wrapper-notification');
 			sessionStorage.setItem('info_booked_car', info_request);
+			$('#infoRequest').text(info_request);
 		}
 	});
 
