@@ -197,11 +197,23 @@ a.article:hover {
 #content {
     width: 100%;
     padding: 20px;
-    min-height: 100vh;
+        height: 100% !important;
     transition: all 0.3s;
 }
 
+#logindiv{
+        position: absolute;
+    top: 28%;
+    left: 50%;
+    display: inline-block;
+    transform: translate(-50%);
+    background-color: #b2b3dafc;
+    padding: 130px;
+}
+
 /* ---------------------------------------------------
+
+
     MEDIAQUERIES
 ----------------------------------------------------- */
 

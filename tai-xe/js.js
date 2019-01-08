@@ -106,7 +106,9 @@ $(document).ready(function() {
 
 	// khi server gui yeu cau nhan lai thong tin
 	socket.on('request_resent_profile', () => {
-		if(HasLogInSuccess)
+		if(HasLogInSuccess){
 			socket.emit('relogin', sessionStorage.getItem('info_user'));
+			sessionStorage.removeItem('info_booked_car');
+		}
 	});
 });
